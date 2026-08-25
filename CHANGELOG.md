@@ -3,6 +3,28 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [2.1.0]
+
+### Added
+
+- Integração com **WooCommerce** (`Banners_OG_Woocommerce`), carregada só com o
+  plugin ativo: post type `product` no metabox, layout `product` com foto e preço,
+  campo **Preço** e placeholders vindos do próprio produto (categoria, descrição
+  curta e `get_price_html()`).
+- **Ponte para os plugins de SEO** (`Banners_OG_Seo`): com Yoast, Rank Math, AIOSEO
+  ou SEOPress ativo o plugin já não imprimia as próprias tags, e agora entrega o
+  banner para quem imprime, pelos filtros públicos de cada um. Desligável pelo
+  filtro `banners_og_seo_bridge`.
+- Filtro `banners_og_post_defaults`, para derivar os placeholders do metabox do
+  conteúdo que está sendo editado.
+- Filtro `banners_og_product_image_url`, para trocar a foto usada pelo layout
+  `product` — útil quando as imagens são servidas por CDN.
+
+### Changed
+
+- A escolha da imagem do request virou `Banners_OG_Meta::current_image()`, pública,
+  para que as meta tags e a ponte de SEO publiquem sempre o mesmo arquivo.
+
 ## [2.0.0]
 
 ### Added

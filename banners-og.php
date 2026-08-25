@@ -5,7 +5,7 @@
  * Plugin Name:       Banners OG
  * Plugin URI:        https://github.com/jeffersonrucu/wp-banners-og
  * Description:       Builds 1200x630 Open Graph banners in the WordPress admin and publishes them as og:image. No external service, no GD or Imagick.
- * Version:           2.0.0
+ * Version:           2.1.0
  * Requires at least: 5.9
  * Requires PHP:      7.4
  * Author:            Jefferson Oliveira

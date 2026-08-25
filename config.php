@@ -7,7 +7,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'BANNERS_OG_VERSION', '2.0.0' );
+define( 'BANNERS_OG_VERSION', '2.1.0' );
 define( 'BANNERS_OG_NAME', 'Banners OG' );
 define( 'BANNERS_OG_FILE', __DIR__ . '/banners-og.php' );
 define( 'BANNERS_OG_DIR', plugin_dir_path( __FILE__ ) );

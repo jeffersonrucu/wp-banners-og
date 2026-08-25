@@ -1,10 +1,10 @@
 === Banners OG ===
 Contributors: jeffersonrucu
-Tags: open graph, og image, twitter card, social sharing, share image
+Tags: open graph, og image, twitter card, social sharing, woocommerce
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -23,15 +23,23 @@ an image extension on the server nor a third-party rendering service.
 * A per-content banner for every supported post type, rebuilt automatically when
   you save the post.
 * `og:*` and `twitter:*` meta tags on the front end, skipped automatically when
-  Yoast SEO, Rank Math, All in One SEO or SEOPress is active.
+  Yoast SEO, Rank Math, All in One SEO or SEOPress is active — and the banner is
+  handed over to that plugin instead, so it is the image that gets shared.
 * An appearance screen for the palette, the font stacks and the brand images, so
   the banners follow the identity of the site instead of a hardcoded brand.
 
+**WooCommerce**
+
+With WooCommerce active, every product gets its own banner, rebuilt when you save
+it. The Product layout prints the product photo, the price and the category, all
+taken from the product itself.
+
 **Four layouts, or your own**
 
-The plugin ships with Cover, Feature, Article and Profile. Developers can register
-extra layouts, add fields to them and enqueue their own CSS, without touching the
-plugin. The extension points are documented in README.md.
+The plugin ships with Cover, Feature, Article and Profile, plus Product when
+WooCommerce is active. Developers can register extra layouts, add fields to them
+and enqueue their own CSS, without touching the plugin. The extension points are
+documented in README.md.
 
 **Where the files live**
 
@@ -69,7 +77,16 @@ is not carried over between environments, open the screen again and generate the
 = Can I use it with an SEO plugin? =
 
 Yes. The meta tags are skipped when a known SEO plugin is active, so it does not
-duplicate them. Use the `banners_og_output_tags` filter to force either behaviour.
+duplicate them, and the banner is passed to that plugin through its own filters.
+Use `banners_og_output_tags` to force the tags, or `banners_og_seo_bridge` to keep
+the image the SEO plugin picked.
+
+= Does it work with WooCommerce? =
+
+Yes. Products are supported like any other content: the banner is rebuilt when you
+save the product and uses the Product layout, with the product photo and price.
+Existing catalogues are not generated in bulk — each product gets its banner the
+first time you save it.
 
 = Can I add my own layout? =
 
@@ -78,6 +95,15 @@ Yes. Register it with the `banners_og_kinds` filter, add its renderer with
 `banners_og_enqueue_assets` action. See README.md.
 
 == Changelog ==
+
+= 2.1.0 =
+
+* WooCommerce: a banner for every product, with the product photo, the price and
+  the category filled in automatically.
+* The generated banner is now handed over to Yoast SEO, Rank Math, All in One SEO
+  and SEOPress, instead of being left unused when one of them prints the tags.
+* New filters: `banners_og_post_defaults`, `banners_og_seo_bridge` and
+  `banners_og_product_image_url`.
 
 = 2.0.0 =
 
