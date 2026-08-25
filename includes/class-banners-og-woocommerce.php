@@ -17,6 +17,9 @@ class Banners_OG_Woocommerce {
 
 	public static function init(): void {
 		add_filter( 'banners_og_post_types', [ __CLASS__, 'post_types' ] );
+		add_filter( 'banners_og_taxonomies', [ __CLASS__, 'taxonomies' ] );
+		add_filter( 'banners_og_default_kind_for_taxonomy', [ __CLASS__, 'default_kind_for_taxonomy' ], 10, 2 );
+		add_filter( 'banners_og_term_defaults', [ __CLASS__, 'term_defaults' ], 10, 2 );
 		add_filter( 'banners_og_kinds', [ __CLASS__, 'kinds' ] );
 		add_filter( 'banners_og_fields', [ __CLASS__, 'fields' ] );
 		add_filter( 'banners_og_fields_for_context', [ __CLASS__, 'fields_for_context' ], 10, 3 );
@@ -36,6 +39,54 @@ class Banners_OG_Woocommerce {
 		$types[] = self::POST_TYPE;
 
 		return array_values( array_unique( $types ) );
+	}
+
+	/**
+	 * @param array<int, string> $taxonomies
+	 *
+	 * @return array<int, string>
+	 */
+	public static function taxonomies( array $taxonomies ): array {
+		return array_values( array_unique( array_merge( $taxonomies, [ 'product_cat', 'product_tag' ] ) ) );
+	}
+
+	public static function default_kind_for_taxonomy( string $kind, string $taxonomy ): string {
+		return in_array( $taxonomy, [ 'product_cat', 'product_tag' ], true ) ? self::KIND : $kind;
+	}
+
+	/**
+	 * Placeholders of a product category: its own description and image, the
+	 * way a product fills in its own.
+	 *
+	 * @param array<string, array<string, string>> $defaults
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	public static function term_defaults( array $defaults, WP_Term $term ): array {
+		if ( 'product_cat' !== $term->taxonomy || ! isset( $defaults[ self::KIND ] ) ) {
+			return $defaults;
+		}
+
+		$from_term = array_filter(
+			[
+				'eyebrow' => (string) get_bloginfo( 'name' ),
+				'sub'     => self::term_summary( $term ),
+				'photo'   => Banners_OG_Storage::drawable_url( (int) get_term_meta( $term->term_id, 'thumbnail_id', true ), 'large' ),
+			],
+			static function ( string $value ): bool {
+				return '' !== $value;
+			}
+		);
+
+		$defaults[ self::KIND ] = array_merge( $defaults[ self::KIND ], $from_term, [ 'show_price' => '' ] );
+
+		return $defaults;
+	}
+
+	private static function term_summary( WP_Term $term ): string {
+		$text = wp_strip_all_tags( strip_shortcodes( (string) $term->description ) );
+
+		return '' !== trim( $text ) ? wp_trim_words( $text, 24 ) : '';
 	}
 
 	/**
