@@ -102,8 +102,13 @@ Yes. Register it with the `banners_og_kinds` filter, add its renderer with
   the category filled in automatically.
 * The generated banner is now handed over to Yoast SEO, Rank Math, All in One SEO
   and SEOPress, instead of being left unused when one of them prints the tags.
-* New filters: `banners_og_post_defaults`, `banners_og_seo_bridge` and
-  `banners_og_product_image_url`.
+* Fields now belong to the layouts that print them, and there are image and
+  toggle fields: the product banner can take another photo or hide the panel.
+* The brand line of the banner became an editable field.
+* Fixes banners that would not open on sites that offload uploads to S3 and
+  friends, and product photos dropped by an image optimizer.
+* New filters: `banners_og_post_defaults`, `banners_og_seo_bridge`,
+  `banners_og_product_image_url` and `banners_og_uploads_url`.
 
 = 2.0.0 =
 

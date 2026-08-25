@@ -19,11 +19,30 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
   conteúdo que está sendo editado.
 - Filtro `banners_og_product_image_url`, para trocar a foto usada pelo layout
   `product` — útil quando as imagens são servidas por CDN.
+- Campos com **escopo de layout** (`kinds`): um campo só aparece nos layouts que o
+  imprimem, e o formulário do metabox troca junto com o select de layout.
+- Tipos de campo **`image`** (media picker) e **`toggle`** (checkbox), com
+  `placeholder` próprio, além de `text` e `textarea`.
+- Campo **Marca**: a assinatura do banner passa a ser editável por banner, com o
+  nome da tela de Aparência como fallback.
+- No layout `product`, os campos **Foto** e **Mostrar a foto no banner**: dá para
+  trocar a imagem ou desligar o painel.
+- Filtro `banners_og_uploads_url`, para servir os banners de outro lugar.
 
 ### Changed
 
 - A escolha da imagem do request virou `Banners_OG_Meta::current_image()`, pública,
   para que as meta tags e a ponte de SEO publiquem sempre o mesmo arquivo.
+- A sanitização dos campos ficou toda em `Banners_OG_Templates::sanitize_fields()`,
+  por tipo de campo, em vez de repetida no metabox e no AJAX.
+
+### Fixed
+
+- Banners deixavam de abrir em site com offload de uploads (S3 e afins): a URL
+  apontava para o bucket, que nunca recebe esses arquivos — eles não são
+  attachments — e respondia `AccessDenied`. Agora são servidos pelo próprio site.
+- A foto do produto sumia do banner quando um otimizador ou offload reescrevia a
+  URL da imagem: agora o arquivo em `uploads/` responde no lugar.
 
 ## [2.0.0]
 

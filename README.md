@@ -106,6 +106,13 @@ regeração apaga o arquivo antigo e usa um nome com timestamp
 
 Consequência: trocar de ambiente sem levar `uploads/` derruba os banners — é só regerar.
 
+Como são arquivos e não attachments, um plugin de offload (S3, Spaces, GCS)
+reescreve a URL de `uploads/` para o bucket mas nunca copia os banners para lá —
+o bucket responderia `AccessDenied`. Quando a URL de uploads aponta para outro
+host, o plugin serve o banner do próprio site
+(`site.com/wp-content/uploads/banners-og/…`). Para servir de outro jeito, use o
+filtro `banners_og_uploads_url`.
+
 ### Meta tags
 
 `Banners_OG_Meta` se cala automaticamente se detectar Yoast, Rank Math, AIOSEO ou
@@ -172,7 +179,9 @@ Com o WooCommerce ativo, `Banners_OG_Woocommerce` entra sozinho e acrescenta:
   banner, regerado ao salvar, como qualquer post;
 - o layout `product`: conteúdo à esquerda (categoria, nome, preço, resumo) e a
   foto do produto no painel à direita;
-- o campo **Preço**, disponível em todos os layouts, impresso só pelo `product`;
+- os campos **Preço**, **Mostrar a foto no banner** (liga/desliga o painel) e
+  **Foto** (media picker, vazio usa a imagem do produto), que só aparecem no
+  layout `product`;
 - o layout `product` como padrão do post type `product` e dos arquivos de
   `product_cat` / `product_tag`.
 
@@ -181,9 +190,9 @@ Exemplo do arquivo final, no layout `product`:
 ![Banner Product gerado, 1200 × 630](.github/screenshots/banner-product.jpg)
 
 Os placeholders do metabox saem do próprio produto: categoria (primeiro termo de
-`product_cat`), resumo (descrição curta, 24 palavras) e preço
-(`get_price_html()`, sem o preço riscado das promoções). Digitar qualquer campo
-sobrescreve; deixar vazio mantém o valor do produto.
+`product_cat`), resumo (descrição curta, 24 palavras), preço
+(`get_price_html()`, sem o preço riscado das promoções) e a imagem destacada.
+Digitar qualquer campo sobrescreve; deixar vazio mantém o valor do produto.
 
 O card **Product** na tela *Banners OG* segue valendo para os arquivos da loja,
 onde não existe um produto específico.
@@ -195,7 +204,9 @@ Limitações conhecidas:
   dispara nova geração — o banner continua com o preço antigo até o próximo save.
   Para não correr o risco, apague o campo Preço no layout.
 - **Foto em CDN.** Uma imagem de outro domínio contamina o canvas e a captura
-  falharia, então ela é descartada e o painel cai no símbolo da marca. Use
+  falharia. O plugin tenta primeiro o arquivo em `uploads/` — o que resolve
+  otimizadores e offload, que só reescrevem a URL — e, se nem esse for do mesmo
+  domínio, descarta a foto e o painel cai no símbolo da marca. Use
   `banners_og_product_image_url` para devolver uma URL same-origin.
 - **Editor novo de produtos** (o experimental, em blocos) não renderiza metaboxes
   clássicos. O banner segue funcionando no editor padrão de produtos.
@@ -222,6 +233,7 @@ Limitações conhecidas:
 | `banners_og_meta_data` | filtro | array montado | Ajusta título, descrição, URL, tipo e imagem. |
 | `banners_og_seo_bridge` | filtro | `true` | Liga/desliga a entrega do banner ao plugin de SEO. |
 | `banners_og_product_image_url` | filtro | foto do produto | Imagem usada pelo layout `product` (`$url, $product`). |
+| `banners_og_uploads_url` | filtro | URL de `uploads/` | De onde os banners gerados são servidos. |
 | `banners_og_enqueue_assets` | action | — | Enfileira CSS/JS de layouts próprios. |
 
 ### API JavaScript
@@ -240,6 +252,9 @@ O renderer recebe `(fields, ctx)` e devolve o HTML de **um** canvas 1200 × 630:
 
 - `fields` — valores por chave de campo (`fields.title`, `fields.sub`, …).
 - `ctx` — `{ esc, image, kind, brand, images: { logo, mark }, width, height }`.
+
+`ctx.brand` é a marca da tela de Aparência, e serve de fallback do campo `brand`:
+os layouts que assinam o banner imprimem `fields.brand || ctx.brand`.
 
 ### Criando um layout do zero
 
@@ -262,17 +277,31 @@ add_filter( 'banners_og_template_defaults', function ( array $defaults, string $
     return $defaults;
 }, 10, 2 );
 
-// Campos extras valem para todos os layouts; só o seu renderer precisa usá-los.
 add_filter( 'banners_og_fields', function ( array $fields ): array {
     $fields['episode'] = [
         'label'       => __( 'Número do episódio', 'meu-tema' ),
-        'type'        => 'text',   // 'text' ou 'textarea'
+        'type'        => 'text',        // text | textarea | image | toggle
         'description' => '',
+        'placeholder' => '#01',         // usado quando o layout não tem default
+        'kinds'       => [ 'podcast' ], // vazio = aparece em todos os layouts
     ];
 
     return $fields;
 } );
 ```
+
+Os tipos:
+
+| Tipo | Controle | Valor gravado |
+| --- | --- | --- |
+| `text` | input de texto | texto |
+| `textarea` | textarea | texto com quebras |
+| `image` | media picker, com preview | URL da imagem |
+| `toggle` | checkbox | `1` ou string vazia |
+
+`kinds` é o que evita poluir os outros layouts: o campo só aparece nos layouts
+listados, e o formulário do metabox troca de campos junto com o select de
+layout. Os textos padrão continuam vindo de `banners_og_template_defaults`.
 
 **2. Enfileire o CSS e o JS do layout**
 
