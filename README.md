@@ -89,6 +89,22 @@ Depois de ativar:
 | `Banners_OG_Meta` | Meta tags `og:*` / `twitter:*` no `wp_head`. |
 | `assets/js/banner.js` | Registro de layouts, preview ao vivo, captura e upload. |
 
+### Onde o banner aparece
+
+Todo post type **público e com tela de edição** ganha o metabox, e toda taxonomia
+pública ganha o editor no termo. Isso inclui os CPTs e as taxonomias que o site
+registra por conta própria: nada precisa ser declarado no plugin. Ficam de fora
+os anexos e os formatos de post, cuja página não é algo que se compartilhe.
+
+Para restringir, os filtros `banners_og_post_types` e `banners_og_taxonomies`
+recebem essa lista:
+
+```php
+add_filter( 'banners_og_post_types', function ( array $types ): array {
+    return array_diff( $types, [ 'cachorro' ] );
+} );
+```
+
 ### Fluxo por conteúdo
 
 1. Todo post/página dos post types suportados ganha um banner **automático**:
@@ -101,8 +117,9 @@ Depois de ativar:
 
 Categorias e tags têm o próprio banner, editado na tela de edição do termo. Sem
 customização, o banner usa o **nome** e a **descrição** do termo, e é regerado a
-cada *Atualizar*. As taxonomias suportadas saem de `banners_og_taxonomies`
-(`category` e `post_tag`, mais `product_cat` e `product_tag` com WooCommerce).
+cada *Atualizar*. Vale para toda taxonomia pública com tela de edição — inclusive as criadas por
+você ou por um plugin de CPT —, menos os formatos de post. Para restringir, use
+`banners_og_taxonomies`.
 
 A descrição do termo também vira a `og:description` do arquivo.
 
@@ -204,8 +221,6 @@ Ainda assim, `--bog-mark-url` é exposta para quem quiser usar a marca como
 
 Com o WooCommerce ativo, `Banners_OG_Woocommerce` entra sozinho e acrescenta:
 
-- o post type `product` na lista do metabox — cada produto ganha o próprio
-  banner, regerado ao salvar, como qualquer post;
 - o layout `product`: conteúdo à esquerda (categoria, nome, preço, resumo) e a
   foto do produto no painel à direita;
 - os campos **Mostrar o preço**, **Mostrar a foto** e **Foto** (media picker),
@@ -264,8 +279,8 @@ issue. É por onde começar quando o `og:image` não abre.
 
 | Hook | Tipo | Default | Uso |
 | --- | --- | --- | --- |
-| `banners_og_post_types` | filtro | `['post', 'page']` | Onde o metabox aparece. |
-| `banners_og_taxonomies` | filtro | `['category', 'post_tag']` | Taxonomias com banner por termo. |
+| `banners_og_post_types` | filtro | post types públicos | Onde o metabox aparece. |
+| `banners_og_taxonomies` | filtro | taxonomias públicas | Taxonomias com banner por termo. |
 | `banners_og_kinds` | filtro | 4 layouts | Adiciona/remove layouts (`kind => rótulo`). |
 | `banners_og_fields` | filtro | eyebrow, title, sub, foot | Campos de texto dos layouts. |
 | `banners_og_font_presets` | filtro | 4 pares tipográficos | Pares oferecidos na tela de Aparência. |

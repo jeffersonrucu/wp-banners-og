@@ -3,6 +3,26 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [2.3.0]
+
+### Changed
+
+- O banner passa a valer para **todo post type público com tela de edição** e para
+  **toda taxonomia pública**, em vez da lista fixa `post` / `page` (+ `product`,
+  `product_cat`, `product_tag`). Um CPT ou uma taxonomia criados no site — à mão
+  ou por um plugin como o CPT UI — aparecem sozinhos. Anexos e formatos de post
+  ficam de fora: a página deles não é algo que se compartilhe.
+- Quem quiser restringir continua usando `banners_og_post_types` e
+  `banners_og_taxonomies`, que agora recebem essa lista para filtrar.
+- O módulo do WooCommerce deixou de empurrar `product` e suas taxonomias: elas já
+  entram pela regra geral.
+
+### Fixed
+
+- Taxonomia registrada no `init` — o caso de qualquer taxonomia customizada — não
+  ganhava o editor de banner: o hook do formulário carrega o nome da taxonomia e
+  era registrado cedo demais, quando ela ainda não existia.
+
 ## [2.2.0]
 
 ### Added

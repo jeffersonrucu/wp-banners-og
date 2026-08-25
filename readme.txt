@@ -4,7 +4,7 @@ Tags: open graph, og image, twitter card, social sharing, woocommerce
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -95,6 +95,12 @@ Yes. Register it with the `banners_og_kinds` filter, add its renderer with
 `banners_og_enqueue_assets` action. See README.md.
 
 == Changelog ==
+
+= 2.3.0 =
+
+* Every public post type and every public taxonomy now gets a banner, custom
+  ones included, instead of a fixed list.
+* Fixes custom taxonomies not showing the banner editor.
 
 = 2.2.0 =
 

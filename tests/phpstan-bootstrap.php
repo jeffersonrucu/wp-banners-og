@@ -6,7 +6,7 @@
 declare(strict_types=1);
 
 define('WPINC', 'wp-includes');
-define('BANNERS_OG_VERSION', '2.2.0');
+define('BANNERS_OG_VERSION', '2.3.0');
 define('BANNERS_OG_NAME', 'Banners OG');
 define('BANNERS_OG_FILE', __DIR__ . '/../banners-og.php');
 define('BANNERS_OG_DIR', __DIR__ . '/../');
