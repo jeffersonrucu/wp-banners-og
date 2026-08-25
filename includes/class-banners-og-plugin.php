@@ -40,10 +40,25 @@ class Banners_OG_Plugin {
 		$meta = get_post_meta( $post_id, self::META_SETTINGS, true );
 		$meta = is_array( $meta ) ? $meta : [];
 
+		$kind = isset( $meta['kind'] ) && Banners_OG_Templates::is_kind( (string) $meta['kind'] )
+			? (string) $meta['kind']
+			: Banners_OG_Templates::default_kind_for_post_type( (string) ( get_post_type( $post_id ) ?: 'post' ) );
+
 		$defaults = Banners_OG_Templates::empty_fields() + [
 			'enabled' => 0,
-			'kind'    => Banners_OG_Templates::default_kind_for_post_type( (string) ( get_post_type( $post_id ) ?: 'post' ) ),
+			'kind'    => $kind,
 		];
+
+		// A toggle has no placeholder to inherit through, and an empty value
+		// would read as off: with nothing saved for this content, the layout
+		// default of the Banners OG screen is what answers.
+		$layout = Banners_OG_Templates::defaults()[ $kind ] ?? [];
+
+		foreach ( Banners_OG_Templates::fields() as $key => $field ) {
+			if ( 'toggle' === $field['type'] ) {
+				$defaults[ $key ] = (string) ( $layout[ $key ] ?? '' );
+			}
+		}
 
 		return wp_parse_args( $meta, $defaults );
 	}

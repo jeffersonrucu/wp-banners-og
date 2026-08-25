@@ -58,6 +58,9 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
   local em `uploads/` e, quando ela não existe, o próprio site serve a imagem
   por `admin-ajax.php` (só ID de anexo, com `edit_posts` e nonce). O Diagnóstico
   mostra qual caminho está em uso.
+- Campos `toggle` nasciam desligados no metabox, ignorando o padrão do layout:
+  marcar "Customize" apagava a foto e o preço do preview. Sem valor gravado para
+  aquele conteúdo, quem responde é a tela Banners OG.
 - O símbolo da marca continuava sumindo do arquivo quando vinha do **ícone do
   site**: só o campo da tela Aparência passava pelo resolvedor de imagem. O
   ícone do site é anexo como qualquer outro e agora segue o mesmo caminho.
