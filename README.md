@@ -462,6 +462,7 @@ banners-og/
 │   ├── js/woocommerce.js         # renderer do layout product
 │   ├── js/settings.js            # media picker e color inputs
 │   └── vendor/html2canvas/       # 1.4.1 (MIT), versionado de propósito
+├── languages/                    # .pot, e pt-BR em .po/.mo/.l10n.php
 ├── bin/
 │   ├── build-dist.sh             # monta dist/banners-og
 │   └── check-version.php         # versão consistente entre header, config e readme
@@ -470,6 +471,23 @@ banners-og/
 ```
 
 ---
+
+## Traduções
+
+O plugin vem com **pt-BR** (`languages/banners-og-pt_BR.po`, `.mo` e `.l10n.php`)
+e com o template `languages/banners-og.pot` para outros idiomas.
+
+Regerar o template depois de mexer nas strings, e recompilar a tradução:
+
+```bash
+wp i18n make-pot . languages/banners-og.pot --domain=banners-og --exclude=index.php
+wp i18n update-po languages/banners-og.pot languages/banners-og-pt_BR.po
+wp i18n make-mo languages/banners-og-pt_BR.po languages/
+wp i18n make-php languages/banners-og-pt_BR.po languages/
+```
+
+O `.l10n.php` é o formato que o WordPress 6.5+ carrega no lugar do `.mo`, mais
+rápido; os dois ficam versionados.
 
 ## Desenvolvimento
 

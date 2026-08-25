@@ -3,6 +3,24 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [2.4.0]
+
+### Added
+
+- **Tradução para pt-BR** completa (105 strings), com o template `.pot` versionado
+  para outros idiomas. Inclui `.l10n.php`, o formato que o WordPress 6.5+ carrega
+  no lugar do `.mo`.
+- A tela **Banners OG** passa a dizer, em cada card, o que aquele banner atende —
+  post types, taxonomias e telas fixas —, e diz quando um layout só é usado se
+  escolhido à mão.
+
+### Fixed
+
+- O plugin nunca chamava `load_plugin_textdomain()`: nenhuma tradução empacotada
+  seria carregada, em idioma algum.
+- `product_brand` (Marcas, do WooCommerce) caía no layout `cover` em vez do
+  `product`.
+
 ## [2.3.0]
 
 ### Changed
