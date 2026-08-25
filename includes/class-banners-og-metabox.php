@@ -108,12 +108,18 @@ class Banners_OG_Metabox {
 								$placeholder = $post_title;
 							}
 
+							// The layout is switched without a reload, so every
+							// field is printed and the JS shows the ones the
+							// selected layout uses.
+							$hidden = [] !== $field['kinds'] && ! in_array( $kind, $field['kinds'], true );
+
 							Banners_OG_Admin::render_field(
 								$key,
 								$field,
 								(string) ( $settings[ $key ] ?? '' ),
 								'banners_og[' . $key . ']',
-								$placeholder
+								$placeholder,
+								$hidden
 							);
 							?>
 						<?php endforeach; ?>
@@ -174,6 +180,7 @@ class Banners_OG_Metabox {
 	 */
 	private static function read_fields(): array {
         // phpcs:disable WordPress.Security.NonceVerification.Missing -- wp_verify_nonce() runs in save() before this.
+        // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitize_fields() cleans every value by its field type.
 		$raw = [];
 
 		foreach ( Banners_OG_Templates::fields() as $key => $field ) {
@@ -181,10 +188,9 @@ class Banners_OG_Metabox {
 				continue;
 			}
 
-			$raw[ $key ] = 'textarea' === $field['type']
-				? sanitize_textarea_field( wp_unslash( $_POST['banners_og'][ $key ] ) )
-				: sanitize_text_field( wp_unslash( $_POST['banners_og'][ $key ] ) );
+			$raw[ $key ] = wp_unslash( $_POST['banners_og'][ $key ] );
 		}
+        // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         // phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		return Banners_OG_Templates::sanitize_fields( $raw );

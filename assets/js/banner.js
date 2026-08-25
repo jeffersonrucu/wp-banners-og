@@ -58,6 +58,7 @@
       image: image,
       corners: corners,
       kind: kind,
+      // Fallback of the brand field: what the Appearance screen says.
       brand: data.brand || '',
       images: data.images || {},
       width: data.width || 1200,
@@ -81,7 +82,7 @@
           '<div class="bog-sub">' + ctx.esc(f.sub) + '</div>' +
         '</div>' +
         '<div class="bog-footer">' +
-          '<div class="bog-brand">' + ctx.esc(ctx.brand) + '</div>' +
+          '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
           '<div class="bog-dot"></div>' +
           '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
         '</div>' +
@@ -92,7 +93,7 @@
     return '' +
       '<div class="bog-canvas bog-canvas--feature">' +
         ctx.image(ctx.images.mark, 'bog-mark-bg') +
-        '<div class="bog-brand">' + ctx.esc(ctx.brand) + '</div>' +
+        '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
         '<div class="bog-content">' +
           '<div class="bog-eyebrow">' + ctx.esc(f.eyebrow) + '</div>' +
           '<div class="bog-title">' + ctx.esc(f.title) + '</div>' +
@@ -112,7 +113,7 @@
       '<div class="bog-canvas bog-canvas--article">' +
         '<div class="bog-side">' +
           (mark ? '<div class="bog-mark-plate">' + mark + '</div>' : '') +
-          '<div class="bog-brand">' + ctx.esc(ctx.brand) + '</div>' +
+          '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
         '</div>' +
         '<div class="bog-content">' +
           '<div class="bog-eyebrow">' + ctx.esc(f.eyebrow) + '</div>' +
@@ -164,6 +165,7 @@
     this.uploading = false;
 
     this.bind();
+    this.syncFields();
     this.syncPlaceholders();
     this.render();
     this.observeResize();
@@ -219,12 +221,31 @@
     return this.postTitle;
   };
 
+  /** Stored value of a field, exactly as it will be saved. */
+  Editor.prototype.raw = function (name) {
+    var input = this.field(name);
+
+    if (!input) {
+      return '';
+    }
+
+    if (input.type === 'checkbox') {
+      return input.checked ? '1' : '';
+    }
+
+    return input.value;
+  };
+
   /** Effective value of a field: what was typed, or its placeholder. */
   Editor.prototype.value = function (name) {
     var input = this.field(name);
 
     if (!input) {
       return '';
+    }
+
+    if (input.type === 'checkbox') {
+      return this.raw(name);
     }
 
     return input.value.trim() || input.getAttribute('placeholder') || '';
@@ -255,6 +276,18 @@
     });
 
     return out;
+  };
+
+  /** Only the fields the selected layout uses stay on screen. */
+  Editor.prototype.syncFields = function () {
+    var kind = this.kind();
+    var labels = this.root.querySelectorAll('.bog-fields label[data-kinds]');
+
+    Array.prototype.forEach.call(labels, function (label) {
+      var kinds = label.dataset.kinds.split(' ');
+
+      label.hidden = kinds.indexOf(kind) === -1;
+    });
   };
 
   /** In the metabox the placeholders follow the selected layout. */
@@ -398,9 +431,7 @@
     body.append('kind', this.kind());
 
     this.fieldKeys().forEach(function (key) {
-      var input = self.field(key);
-
-      body.append('fields[' + key + ']', input ? input.value : '');
+      body.append('fields[' + key + ']', self.raw(key));
     });
 
     if (this.context === 'default') {
@@ -485,8 +516,88 @@
     this.currentInfo.appendChild(link);
   };
 
+  /** Media picker of the image fields, wired to the hidden input. */
+  Editor.prototype.pickImage = function (wrap) {
+    var self = this;
+    var input = wrap.querySelector('.bog-field');
+    var preview = wrap.querySelector('[data-bog-image-preview]');
+    var clear = wrap.querySelector('[data-bog-image-clear]');
+    var wp = window.wp;
+
+    if (!input || !wp || !wp.media) {
+      return;
+    }
+
+    var frame = wp.media({
+      title: data.i18n.selectImage,
+      button: { text: data.i18n.useImage },
+      library: { type: 'image' },
+      multiple: false
+    });
+
+    frame.on('select', function () {
+      var attachment = frame.state().get('selection').first().toJSON();
+      var size = attachment.sizes && attachment.sizes.large ? attachment.sizes.large : attachment;
+
+      input.value = size.url || attachment.url || '';
+      self.showImage(preview, input.value);
+
+      if (clear) {
+        clear.hidden = false;
+      }
+
+      self.render();
+    });
+
+    frame.open();
+  };
+
+  Editor.prototype.showImage = function (preview, url) {
+    if (!preview) {
+      return;
+    }
+
+    preview.innerHTML = '';
+
+    if (!url) {
+      return;
+    }
+
+    var img = document.createElement('img');
+
+    img.src = url;
+    img.alt = '';
+    preview.appendChild(img);
+  };
+
   Editor.prototype.bind = function () {
     var self = this;
+
+    this.root.addEventListener('click', function (event) {
+      var wrap = event.target.closest ? event.target.closest('[data-bog-image]') : null;
+
+      if (!wrap) {
+        return;
+      }
+
+      if (event.target.hasAttribute('data-bog-image-select')) {
+        event.preventDefault();
+        self.pickImage(wrap);
+
+        return;
+      }
+
+      if (event.target.hasAttribute('data-bog-image-clear')) {
+        event.preventDefault();
+
+        var input = wrap.querySelector('.bog-field');
+
+        input.value = '';
+        self.showImage(wrap.querySelector('[data-bog-image-preview]'), input.getAttribute('placeholder') || '');
+        event.target.hidden = true;
+        self.render();
+      }
+    });
 
     function onChange(event) {
       if (!event.target.classList.contains('bog-field')) {
@@ -494,6 +605,7 @@
       }
 
       if (event.target.dataset.field === 'kind') {
+        self.syncFields();
         self.syncPlaceholders();
       }
 
@@ -512,6 +624,7 @@
     if (this.enabledInput && this.customWrap) {
       this.enabledInput.addEventListener('change', function () {
         self.customWrap.hidden = !self.enabledInput.checked;
+        self.syncFields();
         self.syncPlaceholders();
         self.render();
       });

@@ -75,11 +75,13 @@ class Banners_OG_Plugin {
 				'mark' => Banners_OG_Theme::mark_url(),
 			],
 			'i18n'    => [
-				'generating' => __( 'Building banner…', 'banners-og' ),
-				'saving'     => __( 'Saving…', 'banners-og' ),
-				'saved'      => __( 'Banner updated.', 'banners-og' ),
-				'error'      => __( 'The banner could not be generated.', 'banners-og' ),
-				'current'    => __( 'Current banner:', 'banners-og' ),
+				'generating'  => __( 'Building banner…', 'banners-og' ),
+				'saving'      => __( 'Saving…', 'banners-og' ),
+				'saved'       => __( 'Banner updated.', 'banners-og' ),
+				'error'       => __( 'The banner could not be generated.', 'banners-og' ),
+				'current'     => __( 'Current banner:', 'banners-og' ),
+				'selectImage' => __( 'Select image', 'banners-og' ),
+				'useImage'    => __( 'Use this image', 'banners-og' ),
 			],
 		];
 	}
@@ -89,6 +91,13 @@ class Banners_OG_Plugin {
 	 */
 	public static function enqueue_editor_assets(): void {
 		$font_css = Banners_OG_Theme::font_css_url();
+
+		foreach ( Banners_OG_Templates::fields() as $field ) {
+			if ( 'image' === $field['type'] ) {
+				wp_enqueue_media();
+				break;
+			}
+		}
 
 		if ( '' !== $font_css ) {
 			wp_enqueue_style( 'banners-og-fonts', $font_css, [], BANNERS_OG_VERSION );

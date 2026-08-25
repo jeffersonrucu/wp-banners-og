@@ -106,6 +106,7 @@ class Banners_OG_Ajax {
 	 */
 	private static function read_payload(): array {
         // phpcs:disable WordPress.Security.NonceVerification.Missing -- check_ajax_referer() runs in the callbacks above.
+        // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitize_fields() cleans every value by its field type.
 		$kind = isset( $_POST['kind'] ) ? sanitize_key( wp_unslash( $_POST['kind'] ) ) : '';
 		$raw  = [];
 
@@ -114,10 +115,9 @@ class Banners_OG_Ajax {
 				continue;
 			}
 
-			$raw[ $key ] = 'textarea' === $field['type']
-				? sanitize_textarea_field( wp_unslash( $_POST['fields'][ $key ] ) )
-				: sanitize_text_field( wp_unslash( $_POST['fields'][ $key ] ) );
+			$raw[ $key ] = wp_unslash( $_POST['fields'][ $key ] );
 		}
+        // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         // phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		return [

@@ -14,6 +14,11 @@ if ( ! defined( 'WPINC' ) ) {
 class Banners_OG_Templates {
 
 	/**
+	 * Field types the editors know how to render and sanitize.
+	 */
+	const TYPES = [ 'text', 'textarea', 'image', 'toggle' ];
+
+	/**
 	 * Layouts available in the editors (kind => label).
 	 *
 	 * @return array<string, string>
@@ -43,12 +48,16 @@ class Banners_OG_Templates {
 	}
 
 	/**
-	 * Editable text fields shared by every layout.
+	 * Editable text fields of the layouts.
 	 *
 	 * A custom layout may add its own fields through the `banners_og_fields`
-	 * filter; supported types are `text` and `textarea`.
+	 * filter; supported types are `text`, `textarea`, `image` (media picker,
+	 * stores a URL) and `toggle` (checkbox, stores `1` or an empty string). A
+	 * field that only
+	 * makes sense to some layouts lists them in `kinds` — an empty `kinds`
+	 * belongs to every layout.
 	 *
-	 * @return array<string, array{label:string, type:string, description:string}>
+	 * @return array<string, array{label:string, type:string, description:string, placeholder:string, kinds:array<int, string>}>
 	 */
 	public static function fields(): array {
 		$fields = [
@@ -67,6 +76,13 @@ class Banners_OG_Templates {
 				'type'        => 'textarea',
 				'description' => '',
 			],
+			'brand'   => [
+				'label'       => __( 'Brand', 'banners-og' ),
+				'type'        => 'text',
+				'description' => __( 'Leave empty to use the brand name of the Appearance screen.', 'banners-og' ),
+				'placeholder' => Banners_OG_Theme::brand(),
+				'kinds'       => [ 'cover', 'feature', 'article' ],
+			],
 			'foot'    => [
 				'label'       => __( 'Footer (displayed URL)', 'banners-og' ),
 				'type'        => 'text',
@@ -84,14 +100,55 @@ class Banners_OG_Templates {
 				continue;
 			}
 
+			$type = (string) ( $field['type'] ?? 'text' );
+
 			$out[ $key ] = [
 				'label'       => (string) ( $field['label'] ?? $key ),
-				'type'        => 'textarea' === ( $field['type'] ?? 'text' ) ? 'textarea' : 'text',
+				'type'        => in_array( $type, self::TYPES, true ) ? $type : 'text',
 				'description' => (string) ( $field['description'] ?? '' ),
+				'placeholder' => (string) ( $field['placeholder'] ?? '' ),
+				'kinds'       => self::sanitize_kinds( $field['kinds'] ?? [] ),
 			];
 		}
 
 		return [] !== $out ? $out : $fields;
+	}
+
+	/**
+	 * Fields one layout shows: the shared ones, plus the ones declared for it.
+	 *
+	 * @return array<string, array{label:string, type:string, description:string, placeholder:string, kinds:array<int, string>}>
+	 */
+	public static function fields_for_kind( string $kind ): array {
+		return array_filter(
+			self::fields(),
+			static function ( array $field ) use ( $kind ): bool {
+				return [] === $field['kinds'] || in_array( $kind, $field['kinds'], true );
+			}
+		);
+	}
+
+	/**
+	 * @param mixed $kinds
+	 *
+	 * @return array<int, string>
+	 */
+	private static function sanitize_kinds( $kinds ): array {
+		if ( ! is_array( $kinds ) ) {
+			return [];
+		}
+
+		$out = [];
+
+		foreach ( $kinds as $kind ) {
+			$kind = is_scalar( $kind ) ? sanitize_key( (string) $kind ) : '';
+
+			if ( '' !== $kind ) {
+				$out[] = $kind;
+			}
+		}
+
+		return $out;
 	}
 
 	/**
@@ -230,6 +287,9 @@ class Banners_OG_Templates {
 	}
 
 	/**
+	 * Sanitizes the posted copy. Values arrive raw, straight from the request:
+	 * this is where every field of the plugin is cleaned, by its own type.
+	 *
 	 * @param array<string, mixed> $raw
 	 *
 	 * @return array<string, string>
@@ -238,11 +298,21 @@ class Banners_OG_Templates {
 		$out = [];
 
 		foreach ( self::fields() as $key => $field ) {
-			$value = (string) ( $raw[ $key ] ?? '' );
+			$value = isset( $raw[ $key ] ) && is_scalar( $raw[ $key ] ) ? (string) $raw[ $key ] : '';
 
-			$out[ $key ] = 'textarea' === $field['type']
-				? sanitize_textarea_field( $value )
-				: sanitize_text_field( $value );
+			switch ( $field['type'] ) {
+				case 'textarea':
+					$out[ $key ] = sanitize_textarea_field( $value );
+					break;
+				case 'image':
+					$out[ $key ] = esc_url_raw( $value );
+					break;
+				case 'toggle':
+					$out[ $key ] = '' !== $value ? '1' : '';
+					break;
+				default:
+					$out[ $key ] = sanitize_text_field( $value );
+			}
 		}
 
 		return $out;

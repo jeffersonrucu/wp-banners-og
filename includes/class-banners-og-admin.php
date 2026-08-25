@@ -42,28 +42,54 @@ class Banners_OG_Admin {
 	/**
 	 * Renders one text field of a layout.
 	 *
-	 * @param array{label:string, type:string, description:string} $field
+	 * `$hidden` is for the metabox, where the layout can be switched without a
+	 * reload: every field is printed, and the ones that do not belong to the
+	 * current layout start hidden.
+	 *
+	 * @param array{label:string, type:string, description:string, placeholder:string, kinds:array<int, string>} $field
 	 */
-	public static function render_field( string $key, array $field, string $value, string $name, string $placeholder = '' ): void {
-		echo '<label>';
+	public static function render_field( string $key, array $field, string $value, string $name, string $placeholder = '', bool $hidden = false ): void {
+		if ( '' === $placeholder ) {
+			$placeholder = $field['placeholder'];
+		}
+
+		printf(
+			'<label%1$s%2$s>',
+			[] !== $field['kinds'] ? ' data-kinds="' . esc_attr( implode( ' ', $field['kinds'] ) ) . '"' : '',
+			$hidden ? ' hidden' : ''
+		);
+
 		echo '<span>' . esc_html( $field['label'] ) . '</span>';
 
-		if ( 'textarea' === $field['type'] ) {
-			printf(
-				'<textarea rows="3" class="bog-field" data-field="%1$s" name="%2$s" placeholder="%3$s">%4$s</textarea>',
-				esc_attr( $key ),
-				esc_attr( $name ),
-				esc_attr( $placeholder ),
-				esc_textarea( $value )
-			);
-		} else {
-			printf(
-				'<input type="text" class="bog-field" data-field="%1$s" name="%2$s" placeholder="%3$s" value="%4$s">',
-				esc_attr( $key ),
-				esc_attr( $name ),
-				esc_attr( $placeholder ),
-				esc_attr( $value )
-			);
+		switch ( $field['type'] ) {
+			case 'textarea':
+				printf(
+					'<textarea rows="3" class="bog-field" data-field="%1$s" name="%2$s" placeholder="%3$s">%4$s</textarea>',
+					esc_attr( $key ),
+					esc_attr( $name ),
+					esc_attr( $placeholder ),
+					esc_textarea( $value )
+				);
+				break;
+			case 'image':
+				self::render_image_field( $key, $name, $value, $placeholder );
+				break;
+			case 'toggle':
+				printf(
+					'<input type="checkbox" class="bog-field" data-field="%1$s" name="%2$s" value="1"%3$s>',
+					esc_attr( $key ),
+					esc_attr( $name ),
+					checked( '' !== $value, true, false )
+				);
+				break;
+			default:
+				printf(
+					'<input type="text" class="bog-field" data-field="%1$s" name="%2$s" placeholder="%3$s" value="%4$s">',
+					esc_attr( $key ),
+					esc_attr( $name ),
+					esc_attr( $placeholder ),
+					esc_attr( $value )
+				);
 		}
 
 		if ( '' !== $field['description'] ) {
@@ -71,6 +97,38 @@ class Banners_OG_Admin {
 		}
 
 		echo '</label>';
+	}
+
+	/**
+	 * Media picker of an `image` field. The value is the chosen URL; empty
+	 * falls back to `$placeholder`, which is the image the layout would use on
+	 * its own.
+	 */
+	private static function render_image_field( string $key, string $name, string $value, string $placeholder ): void {
+		$preview = '' !== $value ? $value : $placeholder;
+		?>
+		<span class="bog-image" data-bog-image>
+			<input type="hidden" class="bog-field" data-field="<?php echo esc_attr( $key ); ?>"
+					name="<?php echo esc_attr( $name ); ?>"
+					value="<?php echo esc_attr( $value ); ?>"
+					placeholder="<?php echo esc_attr( $placeholder ); ?>">
+
+			<span class="bog-image__preview" data-bog-image-preview>
+				<?php if ( '' !== $preview ) : ?>
+					<img src="<?php echo esc_url( $preview ); ?>" alt="">
+				<?php endif; ?>
+			</span>
+
+			<span class="bog-image__actions">
+				<button type="button" class="button button-small" data-bog-image-select>
+					<?php esc_html_e( 'Select image', 'banners-og' ); ?>
+				</button>
+				<button type="button" class="button-link" data-bog-image-clear<?php echo '' !== $value ? '' : ' hidden'; ?>>
+					<?php esc_html_e( 'Use the default one', 'banners-og' ); ?>
+				</button>
+			</span>
+		</span>
+		<?php
 	}
 
 	/**
@@ -100,7 +158,6 @@ class Banners_OG_Admin {
 
 		$defaults = Banners_OG_Templates::defaults();
 		$kinds    = Banners_OG_Templates::kinds();
-		$fields   = Banners_OG_Templates::fields();
 		?>
 		<div class="wrap bog-wrap">
 			<h1><?php esc_html_e( 'Open Graph banners', 'banners-og' ); ?></h1>
@@ -118,6 +175,7 @@ class Banners_OG_Admin {
 			<?php foreach ( $kinds as $kind => $label ) : ?>
 				<?php
 				$values    = $defaults[ $kind ] ?? [];
+				$fields    = Banners_OG_Templates::fields_for_kind( $kind );
 				$image_url = (string) ( Banners_OG_Storage::image_url( (string) ( $values['image'] ?? '' ) ) ?? '' );
 				?>
 				<div class="bog-card bog-editor" data-context="default" data-kind="<?php echo esc_attr( $kind ); ?>">
