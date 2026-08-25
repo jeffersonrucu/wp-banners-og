@@ -10,6 +10,8 @@
     <!-- Build tooling: runs on the CLI, not inside WordPress. -->
     <exclude-pattern>/bin/*</exclude-pattern>
     <exclude-pattern>/tests/*</exclude-pattern>
+    <!-- Translation catalogue built by `wp i18n make-php`: generated, not written. -->
+    <exclude-pattern>*.l10n.php</exclude-pattern>
 
     <arg name="extensions" value="php"/>
     <arg name="basepath" value="."/>
