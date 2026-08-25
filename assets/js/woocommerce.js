@@ -1,9 +1,10 @@
 /**
  * Banners OG — the WooCommerce product layout.
  *
- * Every value comes from the fields: the photo of the product is the
- * placeholder of the `photo` field, filled in by
- * Banners_OG_Woocommerce::post_defaults().
+ * The photo of the product is the placeholder of the `photo` field, filled in
+ * by Banners_OG_Woocommerce::post_defaults(). The price is not a field at all:
+ * it is always the current price of the product, and the form only says whether
+ * to print it.
  */
 (function (window) {
   'use strict';
@@ -34,15 +35,23 @@
     return '<div class="bog-shot bog-shot--empty">' + ctx.image(ctx.images.mark, 'bog-mark') + '</div>';
   }
 
+  function price(f) {
+    return f.show_price ? ((window.BannersOGWoo || {}).price || '') : '';
+  }
+
   api.registerTemplate('product', function (f, ctx) {
+    var amount = price(f);
+    // Product names run long, and the panel leaves the text half the canvas.
+    var title = ctx.clamp(f.title, 80);
+
     return '' +
       '<div class="bog-canvas bog-canvas--product">' +
         '<div class="bog-content">' +
-          '<div class="bog-eyebrow">' + ctx.esc(f.eyebrow) + '</div>' +
-          '<div class="bog-title">' + ctx.esc(f.title) + '</div>' +
-          (f.price ? '<div class="bog-price">' + ctx.esc(f.price) + '</div>' : '') +
+          '<div class="bog-eyebrow">' + ctx.esc(ctx.clamp(f.eyebrow, 34)) + '</div>' +
+          '<div class="bog-title' + ctx.titleSize(title, 24, 44) + '">' + ctx.esc(title) + '</div>' +
+          (amount ? '<div class="bog-price">' + ctx.esc(amount) + '</div>' : '') +
           '<div class="bog-divider"></div>' +
-          '<div class="bog-sub">' + ctx.esc(f.sub) + '</div>' +
+          '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 120)) + '</div>' +
           '<div class="bog-footer">' +
             '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
             '<div class="bog-dot"></div>' +

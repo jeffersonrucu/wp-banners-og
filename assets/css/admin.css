@@ -81,6 +81,9 @@
   border-right-width: 2px;
 }
 
+/* Long copy steps the title down a size, set by layout: the canvas is fixed at
+   1200x630 and text that grows has nowhere to go. */
+
 /* ----- Cover ----- */
 
 .bog-canvas--cover {
@@ -113,6 +116,9 @@
   font-size: 104px;
   line-height: .92;
 }
+
+.bog-canvas--cover .bog-title--sm { font-size: 76px; }
+.bog-canvas--cover .bog-title--xs { font-size: 56px; }
 
 .bog-canvas--cover .bog-divider {
   width: 66px;
@@ -202,6 +208,9 @@
   line-height: .98;
   color: #fff;
 }
+
+.bog-canvas--feature .bog-title--sm { font-size: 72px; }
+.bog-canvas--feature .bog-title--xs { font-size: 54px; }
 
 .bog-canvas--feature .bog-sub {
   font-size: 22px;
@@ -293,6 +302,9 @@
   line-height: 1.02;
 }
 
+.bog-canvas--article .bog-title--sm { font-size: 62px; }
+.bog-canvas--article .bog-title--xs { font-size: 48px; }
+
 .bog-canvas--article .bog-divider {
   width: 60px;
   height: 1px;
@@ -350,6 +362,9 @@
   font-size: 92px;
   line-height: .98;
 }
+
+.bog-canvas--profile .bog-title--sm { font-size: 70px; }
+.bog-canvas--profile .bog-title--xs { font-size: 54px; }
 
 .bog-canvas--profile .bog-divider {
   width: 66px;

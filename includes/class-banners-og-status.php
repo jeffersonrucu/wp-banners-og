@@ -126,7 +126,23 @@ class Banners_OG_Status {
 			'banners base url'         => $paths['url'],
 			'banners url is same host' => wp_parse_url( $paths['url'], PHP_URL_HOST ) === wp_parse_url( home_url(), PHP_URL_HOST ) ? 'yes' : 'no',
 			'storage mode'             => Banners_OG_Storage::uses_attachments() ? 'attachment (media library)' : 'plain file',
+			'brand logo drawable'      => self::drawable( Banners_OG_Theme::logo_url() ),
+			'brand mark drawable'      => self::drawable( Banners_OG_Theme::mark_url() ),
 		];
+	}
+
+	/**
+	 * html2canvas cannot draw a cross-origin image, so a brand image published
+	 * from another host silently disappears from the generated file.
+	 */
+	private static function drawable( string $url ): string {
+		if ( '' === $url ) {
+			return 'no image';
+		}
+
+		$same_host = wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( admin_url(), PHP_URL_HOST );
+
+		return $same_host ? 'yes: ' . $url : 'NO, cross-origin: ' . $url;
 	}
 
 	/**

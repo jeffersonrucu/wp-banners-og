@@ -175,7 +175,7 @@ class Banners_OG_Admin {
 			<?php foreach ( $kinds as $kind => $label ) : ?>
 				<?php
 				$values    = $defaults[ $kind ] ?? [];
-				$fields    = Banners_OG_Templates::fields_for_kind( $kind );
+				$fields    = Banners_OG_Templates::fields_for_kind( $kind, 'default' );
 				$image_url = (string) ( Banners_OG_Storage::image_url( (string) ( $values['image'] ?? '' ) ) ?? '' );
 				?>
 				<div class="bog-card bog-editor" data-context="default" data-kind="<?php echo esc_attr( $kind ); ?>">

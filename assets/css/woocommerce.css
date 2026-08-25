@@ -28,6 +28,9 @@
   line-height: 1.04;
 }
 
+.bog-canvas--product .bog-title--sm { font-size: 54px; }
+.bog-canvas--product .bog-title--xs { font-size: 44px; }
+
 .bog-canvas--product .bog-price {
   font-family: var(--bog-font-heading, serif);
   font-size: 44px;

@@ -264,12 +264,6 @@ class Banners_OG_Theme {
 	}
 
 	private static function attachment_url( int $attachment_id ): string {
-		if ( $attachment_id < 1 ) {
-			return '';
-		}
-
-		$url = wp_get_attachment_image_url( $attachment_id, 'full' );
-
-		return is_string( $url ) ? $url : '';
+		return Banners_OG_Storage::drawable_url( $attachment_id );
 	}
 }

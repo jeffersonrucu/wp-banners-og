@@ -196,9 +196,9 @@ Com o WooCommerce ativo, `Banners_OG_Woocommerce` entra sozinho e acrescenta:
   banner, regerado ao salvar, como qualquer post;
 - o layout `product`: conteúdo à esquerda (categoria, nome, preço, resumo) e a
   foto do produto no painel à direita;
-- os campos **Preço**, **Mostrar a foto no banner** (liga/desliga o painel) e
-  **Foto** (media picker, vazio usa a imagem do produto), que só aparecem no
-  layout `product`;
+- os campos **Mostrar o preço**, **Mostrar a foto** e **Foto** (media picker),
+  que só aparecem no layout `product`. O preço nunca é digitado: é sempre o
+  preço atual do produto, e o campo só diz se ele é impresso;
 - o layout `product` como padrão do post type `product` e dos arquivos de
   `product_cat` / `product_tag`.
 
@@ -211,8 +211,9 @@ Os placeholders do metabox saem do próprio produto: categoria (primeiro termo d
 (`get_price_html()`, sem o preço riscado das promoções) e a imagem destacada.
 Digitar qualquer campo sobrescreve; deixar vazio mantém o valor do produto.
 
-O card **Product** na tela *Banners OG* segue valendo para os arquivos da loja,
-onde não existe um produto específico.
+O card **Product** na tela *Banners OG* é a configuração geral: vale para os
+arquivos da loja, define o padrão dos toggles e a **foto de fallback**, usada por
+produto sem imagem própria. Como ali não existe produto, o preview sai sem preço.
 
 Limitações conhecidas:
 
@@ -220,11 +221,13 @@ Limitações conhecidas:
   de preço fora do editor (promoção agendada, edição em massa, importação) não
   dispara nova geração — o banner continua com o preço antigo até o próximo save.
   Para não correr o risco, apague o campo Preço no layout.
-- **Foto em CDN.** Uma imagem de outro domínio contamina o canvas e a captura
-  falharia. O plugin tenta primeiro o arquivo em `uploads/` — o que resolve
-  otimizadores e offload, que só reescrevem a URL — e, se nem esse for do mesmo
-  domínio, descarta a foto e o painel cai no símbolo da marca. Use
-  `banners_og_product_image_url` para devolver uma URL same-origin.
+- **Imagem em CDN.** O html2canvas não desenha imagem de outro domínio: ela
+  aparece no preview e some do arquivo gerado. Vale para a foto do produto e
+  também para o logo e o símbolo da marca. O plugin resolve a URL para a cópia
+  local em `uploads/` quando ela existe; quando não existe, a imagem é
+  descartada em vez de quebrar a captura. **Banners OG › Diagnóstico** diz, em
+  `brand logo drawable` e `brand mark drawable`, se as imagens da marca passam.
+  `banners_og_product_image_url` força outra URL para a foto do produto.
 - **Editor novo de produtos** (o experimental, em blocos) não renderiza metaboxes
   clássicos. O banner segue funcionando no editor padrão de produtos.
 - **Catálogo existente** não é gerado em lote: hoje o banner nasce ao salvar o
@@ -271,12 +274,18 @@ Disponível em `window.BannersOG` depois que `banners-og-banner` carrega:
 | `templates` | Mapa `kind => renderer`. |
 | `helpers.esc(value)` | Escapa texto para HTML. |
 | `helpers.image(url, className)` | Devolve `<img>` — ou string vazia se não houver URL. |
+| `helpers.clamp(texto, max)` | Corta na palavra e fecha com `…`. |
+| `helpers.titleSize(texto, mid, small)` | Modificador `bog-title--sm` / `--xs` conforme o tamanho do texto. |
 | `boot()` | Reescaneia a página em busca de editores. |
 
 O renderer recebe `(fields, ctx)` e devolve o HTML de **um** canvas 1200 × 630:
 
 - `fields` — valores por chave de campo (`fields.title`, `fields.sub`, …).
-- `ctx` — `{ esc, image, kind, brand, images: { logo, mark }, width, height }`.
+- `ctx` — `{ esc, image, corners, clamp, titleSize, kind, brand, images: { logo, mark }, width, height }`.
+
+O canvas é fixo em 1200 × 630 e o texto que cresce não tem para onde ir: os
+layouts do plugin passam título e subtítulo por `clamp()` e descem um degrau de
+corpo (`--sm`, `--xs`) quando o texto é longo. Um layout próprio faz o mesmo.
 
 `ctx.brand` é a marca da tela de Aparência, e serve de fallback do campo `brand`:
 os layouts que assinam o banner imprimem `fields.brand || ctx.brand`.

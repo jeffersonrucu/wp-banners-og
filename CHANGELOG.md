@@ -25,8 +25,11 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
   `placeholder` próprio, além de `text` e `textarea`.
 - Campo **Marca**: a assinatura do banner passa a ser editável por banner, com o
   nome da tela de Aparência como fallback.
-- No layout `product`, os campos **Foto** e **Mostrar a foto no banner**: dá para
-  trocar a imagem ou desligar o painel.
+- No layout `product`, os campos **Foto**, **Mostrar a foto** e **Mostrar o
+  preço**. O preço não é digitável: vem sempre do produto.
+- Filtro `banners_og_fields_for_context`, que deixa um campo se apresentar de
+  formas diferentes na tela geral e no metabox — é como a **Foto** vira *foto de
+  fallback* na tela Banners OG.
 - Filtro `banners_og_uploads_url`, para servir os banners de outro lugar.
 - Tela **Diagnóstico**: onde os banners são gravados, a URL publicada, o status
   HTTP dessa URL e os sinais de offload de uploads, com relatório em texto puro.
@@ -46,8 +49,15 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
   gravado como attachment, para o plugin de offload subir e servir; nos demais
   continua sendo arquivo solto, fora da biblioteca. Filtros
   `banners_og_use_attachments` e `banners_og_uploads_url`.
-- A foto do produto sumia do banner quando um otimizador ou offload reescrevia a
-  URL da imagem: agora o arquivo em `uploads/` responde no lugar.
+- Imagens de outro domínio (CDN, offload) apareciam no preview e sumiam do
+  arquivo gerado — o html2canvas não desenha imagem cross-origin. Vale para a
+  foto do produto e para o logo e o símbolo da marca: agora a cópia local em
+  `uploads/` responde no lugar. O Diagnóstico mostra se as imagens da marca
+  passam.
+- Título e subtítulo longos empurravam o resto do banner para fora do canvas:
+  passam por `clamp()` e o título desce um degrau de corpo conforme o tamanho.
+- Assets versionados pelo arquivo, e não só pela versão do plugin: dentro de uma
+  mesma versão o navegador servia o JS antigo.
 
 ## [2.0.0]
 

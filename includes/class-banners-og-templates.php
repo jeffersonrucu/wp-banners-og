@@ -119,13 +119,23 @@ class Banners_OG_Templates {
 	 *
 	 * @return array<string, array{label:string, type:string, description:string, placeholder:string, kinds:array<int, string>}>
 	 */
-	public static function fields_for_kind( string $kind ): array {
-		return array_filter(
+	public static function fields_for_kind( string $kind, string $context = 'default' ): array {
+		$fields = array_filter(
 			self::fields(),
 			static function ( array $field ) use ( $kind ): bool {
 				return [] === $field['kinds'] || in_array( $kind, $field['kinds'], true );
 			}
 		);
+
+		/**
+		 * Filters the fields of a layout for the screen about to render them:
+		 * `default` is the Banners OG screen, `post` is the metabox. The same
+		 * field can mean different things on each — the site-wide default and
+		 * the value of one content.
+		 */
+		$filtered = apply_filters( 'banners_og_fields_for_context', $fields, $kind, $context );
+
+		return is_array( $filtered ) ? $filtered : $fields;
 	}
 
 	/**

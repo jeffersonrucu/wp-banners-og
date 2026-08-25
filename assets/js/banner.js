@@ -44,7 +44,42 @@
     }).join('');
   }
 
-  api.helpers = { esc: esc, image: image, corners: corners };
+  /**
+   * Cuts on a word boundary and marks the cut, so a long title crops instead
+   * of pushing the rest of the banner out of the canvas.
+   */
+  function clamp(value, max) {
+    var text = String(value == null ? '' : value).trim();
+
+    if (text.length <= max) {
+      return text;
+    }
+
+    var cut = text.slice(0, max);
+    var space = cut.lastIndexOf(' ');
+
+    if (space > max * 0.6) {
+      cut = cut.slice(0, space);
+    }
+
+    return cut.replace(/[\s,.;:—–-]+$/, '') + '…';
+  }
+
+  /**
+   * Modifier of the title for the length of the text: a long title steps down
+   * a size instead of eating the space of everything below it.
+   */
+  function titleSize(text, mid, small) {
+    var length = String(text == null ? '' : text).trim().length;
+
+    if (length > small) {
+      return ' bog-title--xs';
+    }
+
+    return length > mid ? ' bog-title--sm' : '';
+  }
+
+  api.helpers = { esc: esc, image: image, corners: corners, clamp: clamp, titleSize: titleSize };
 
   api.registerTemplate = function (kind, renderer) {
     if (typeof kind === 'string' && typeof renderer === 'function') {
@@ -57,6 +92,8 @@
       esc: esc,
       image: image,
       corners: corners,
+      clamp: clamp,
+      titleSize: titleSize,
       kind: kind,
       // Fallback of the brand field: what the Appearance screen says.
       brand: data.brand || '',
@@ -71,15 +108,17 @@
    * ------------------------------------------------------------------- */
 
   api.registerTemplate('cover', function (f, ctx) {
+    var title = ctx.clamp(f.title, 90);
+
     return '' +
       '<div class="bog-canvas bog-canvas--cover">' +
         ctx.corners() +
         '<div class="bog-content">' +
-          '<div class="bog-eyebrow">' + ctx.esc(f.eyebrow) + '</div>' +
+          '<div class="bog-eyebrow">' + ctx.esc(ctx.clamp(f.eyebrow, 44)) + '</div>' +
           ctx.image(ctx.images.mark, 'bog-mark') +
-          '<div class="bog-title">' + ctx.esc(f.title) + '</div>' +
+          '<div class="bog-title' + ctx.titleSize(title, 24, 44) + '">' + ctx.esc(title) + '</div>' +
           '<div class="bog-divider"></div>' +
-          '<div class="bog-sub">' + ctx.esc(f.sub) + '</div>' +
+          '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 150)) + '</div>' +
         '</div>' +
         '<div class="bog-footer">' +
           '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
@@ -90,14 +129,16 @@
   });
 
   api.registerTemplate('feature', function (f, ctx) {
+    var title = ctx.clamp(f.title, 95);
+
     return '' +
       '<div class="bog-canvas bog-canvas--feature">' +
         ctx.image(ctx.images.mark, 'bog-mark-bg') +
         '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
         '<div class="bog-content">' +
-          '<div class="bog-eyebrow">' + ctx.esc(f.eyebrow) + '</div>' +
-          '<div class="bog-title">' + ctx.esc(f.title) + '</div>' +
-          '<div class="bog-sub">' + ctx.esc(f.sub) + '</div>' +
+          '<div class="bog-eyebrow">' + ctx.esc(ctx.clamp(f.eyebrow, 44)) + '</div>' +
+          '<div class="bog-title' + ctx.titleSize(title, 26, 48) + '">' + ctx.esc(title) + '</div>' +
+          '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 160)) + '</div>' +
         '</div>' +
         '<div class="bog-footer">' +
           '<div class="bog-footline"></div>' +
@@ -108,6 +149,7 @@
 
   api.registerTemplate('article', function (f, ctx) {
     var mark = ctx.image(ctx.images.mark, 'bog-mark');
+    var title = ctx.clamp(f.title, 110);
 
     return '' +
       '<div class="bog-canvas bog-canvas--article">' +
@@ -116,27 +158,29 @@
           '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
         '</div>' +
         '<div class="bog-content">' +
-          '<div class="bog-eyebrow">' + ctx.esc(f.eyebrow) + '</div>' +
-          '<div class="bog-title">' + ctx.esc(f.title) + '</div>' +
+          '<div class="bog-eyebrow">' + ctx.esc(ctx.clamp(f.eyebrow, 44)) + '</div>' +
+          '<div class="bog-title' + ctx.titleSize(title, 32, 58) + '">' + ctx.esc(title) + '</div>' +
           '<div class="bog-divider"></div>' +
-          '<div class="bog-sub">' + ctx.esc(f.sub) + '</div>' +
+          '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 170)) + '</div>' +
           '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
         '</div>' +
       '</div>';
   });
 
   api.registerTemplate('profile', function (f, ctx) {
+    var title = ctx.clamp(f.title, 90);
+
     return '' +
       '<div class="bog-canvas bog-canvas--profile">' +
         ctx.corners() +
         '<div class="bog-content">' +
-          '<div class="bog-eyebrow">' + ctx.esc(f.eyebrow) + '</div>' +
+          '<div class="bog-eyebrow">' + ctx.esc(ctx.clamp(f.eyebrow, 44)) + '</div>' +
           (ctx.images.logo
             ? ctx.image(ctx.images.logo, 'bog-logo')
             : ctx.image(ctx.images.mark, 'bog-mark')) +
-          '<div class="bog-title">' + ctx.esc(f.title) + '</div>' +
+          '<div class="bog-title' + ctx.titleSize(title, 24, 44) + '">' + ctx.esc(title) + '</div>' +
           '<div class="bog-divider"></div>' +
-          '<div class="bog-sub">' + ctx.esc(f.sub) + '</div>' +
+          '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 150)) + '</div>' +
         '</div>' +
         '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
       '</div>';

@@ -105,6 +105,63 @@ class Banners_OG_Storage {
 	}
 
 	/**
+	 * URL of an attachment that the capture can actually draw.
+	 *
+	 * html2canvas cannot export a canvas touched by a cross-origin image, and
+	 * an optimizer or an offload plugin publishes the media from another host.
+	 * The copy under uploads/ answers in its place when there is one; when
+	 * there is not, an empty string, so the layout falls back instead of
+	 * failing the capture.
+	 */
+	public static function drawable_url( int $attachment_id, string $size = 'full' ): string {
+		if ( $attachment_id < 1 ) {
+			return '';
+		}
+
+		$url = wp_get_attachment_image_url( $attachment_id, $size );
+		$url = is_string( $url ) ? $url : '';
+
+		if ( '' === $url || self::same_origin( $url ) ) {
+			return $url;
+		}
+
+		$file = get_post_meta( $attachment_id, '_wp_attached_file', true );
+
+		return is_string( $file ) && '' !== $file ? self::local_uploads_url( $file ) : '';
+	}
+
+	/**
+	 * URL on the host of the site for a file inside uploads/, empty when the
+	 * folder is not local or the file is not there.
+	 */
+	public static function local_uploads_url( string $relative ): string {
+		$uploads  = wp_get_upload_dir();
+		$basedir  = (string) $uploads['basedir'];
+		$content  = untrailingslashit( WP_CONTENT_DIR );
+		$relative = ltrim( $relative, '/' );
+
+		if ( wp_is_stream( $basedir ) || 0 !== strpos( $basedir, $content ) ) {
+			return '';
+		}
+
+		if ( ! file_exists( $basedir . '/' . $relative ) ) {
+			return '';
+		}
+
+		$url = content_url( substr( $basedir, strlen( $content ) ) . '/' . $relative );
+
+		return self::same_origin( $url ) ? $url : '';
+	}
+
+	/**
+	 * The capture runs in the admin, so that is the origin an image has to
+	 * match to be drawable.
+	 */
+	private static function same_origin( string $url ): bool {
+		return wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( admin_url(), PHP_URL_HOST );
+	}
+
+	/**
 	 * Stored banners are either a file name or the ID of an attachment.
 	 */
 	private static function is_attachment( string $stored ): bool {
