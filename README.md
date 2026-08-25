@@ -16,18 +16,17 @@ O plugin não tem marca embutida: paleta, tipografia, logo e símbolo vêm das
 configurações; layouts, campos e textos padrão são filtráveis; e um layout novo
 pode ser registrado de fora, sem tocar no plugin.
 
+**OG Banners** — um card por layout, com preview ao vivo e o arquivo em uso:
+
 ![Tela OG Banners com os quatro layouts](.github/screenshots/banners.png)
 
-<table>
-<tr>
-<td width="50%"><img src=".github/screenshots/appearance.png" alt="Tela de aparência: paleta, tipografia e marca"></td>
-<td width="50%"><img src=".github/screenshots/metabox.png" alt="Metabox de banner no editor de post"></td>
-</tr>
-<tr>
-<td>Aparência: paleta, par tipográfico e imagens da marca.</td>
-<td>Metabox: banner próprio por conteúdo, gerado ao salvar.</td>
-</tr>
-</table>
+**Aparência** — paleta, par tipográfico e imagens da marca:
+
+![Tela de aparência: paleta, par tipográfico e imagens da marca](.github/screenshots/appearance.png)
+
+**Metabox** — cada post ganha o próprio banner, gerado ao salvar:
+
+![Metabox de banner no editor de post](.github/screenshots/metabox.png)
 
 ---
 
@@ -117,6 +116,8 @@ SEOPress. Para forçar o comportamento, use o filtro `banners_og_output_tags`.
 | `feature` | Fundo escuro, conteúdo à esquerda, símbolo em marca d'água. |
 | `article` | Painel escuro à esquerda com símbolo e marca, conteúdo à direita. |
 | `profile` | Centralizado em fundo alternativo, com logo horizontal. |
+
+Exemplo do arquivo final, no layout `cover`:
 
 ![Banner Cover gerado, 1200 × 630](.github/screenshots/banner-cover.jpg)
 
