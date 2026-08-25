@@ -99,19 +99,30 @@ Depois de ativar:
 
 ### Armazenamento
 
-Os banners **não** entram na biblioteca de mídia: ficam em
+Fora de sites com offload (veja abaixo), os banners **não** entram na biblioteca
+de mídia: ficam em
 `wp-content/uploads/banners-og/`, com um `index.php` para bloquear autoindex. Cada
 regeração apaga o arquivo antigo e usa um nome com timestamp
 (`og-post-42-20260825120000.jpg`) para furar o cache das redes sociais.
 
 Consequência: trocar de ambiente sem levar `uploads/` derruba os banners — é só regerar.
 
-Como são arquivos e não attachments, um plugin de offload (S3, Spaces, GCS)
-reescreve a URL de `uploads/` para o bucket mas nunca copia os banners para lá —
-o bucket responderia `AccessDenied`. Quando a URL de uploads aponta para outro
-host, o plugin serve o banner do próprio site
-(`site.com/wp-content/uploads/banners-og/…`). Para servir de outro jeito, use o
-filtro `banners_og_uploads_url`.
+**Site com offload de uploads (S3, Spaces, GCS).** Nesses sites a pasta de
+uploads é publicada por outro host, e só attachment faz essa viagem: um arquivo
+solto seria publicado a partir de um bucket que nunca o recebeu — daí o
+`AccessDenied`. Quando o plugin detecta que a URL de uploads está em outro host,
+o banner passa a ser gravado **como attachment**, e o plugin de offload cuida de
+subir e servir, como faz com qualquer imagem da biblioteca. Sem tamanhos
+intermediários: o banner é publicado inteiro.
+
+A detecção é automática, e os filtros mandam mais que ela:
+
+| Filtro | Para quê |
+| --- | --- |
+| `banners_og_use_attachments` | Força (ou proíbe) o modo attachment. |
+| `banners_og_uploads_url` | Muda de onde os arquivos soltos são servidos. |
+
+**Banners OG › Diagnóstico** mostra qual modo está em uso.
 
 ### Meta tags
 
@@ -241,6 +252,7 @@ issue. É por onde começar quando o `og:image` não abre.
 | `banners_og_seo_bridge` | filtro | `true` | Liga/desliga a entrega do banner ao plugin de SEO. |
 | `banners_og_product_image_url` | filtro | foto do produto | Imagem usada pelo layout `product` (`$url, $product`). |
 | `banners_og_uploads_url` | filtro | URL de `uploads/` | De onde os banners gerados são servidos. |
+| `banners_og_use_attachments` | filtro | detecção de offload | Grava o banner como attachment em vez de arquivo solto. |
 | `banners_og_enqueue_assets` | action | — | Enfileira CSS/JS de layouts próprios. |
 
 ### API JavaScript

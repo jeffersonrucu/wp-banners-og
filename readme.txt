@@ -106,7 +106,11 @@ Yes. Register it with the `banners_og_kinds` filter, add its renderer with
   toggle fields: the product banner can take another photo or hide the panel.
 * The brand line of the banner became an editable field.
 * Fixes banners that would not open on sites that offload uploads to S3 and
-  friends, and product photos dropped by an image optimizer.
+  friends: there the banner is stored as an attachment, so the offload plugin
+  uploads and serves it. Also fixes product photos dropped by an image
+  optimizer.
+* New Diagnostics screen: where the banners are written, the URL they publish
+  and the HTTP status it answers.
 * New filters: `banners_og_post_defaults`, `banners_og_seo_bridge`,
   `banners_og_product_image_url` and `banners_og_uploads_url`.
 

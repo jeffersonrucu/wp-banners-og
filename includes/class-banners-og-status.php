@@ -125,6 +125,7 @@ class Banners_OG_Status {
 			'banners dir writable'     => wp_is_writable( $paths['dir'] ) ? 'yes' : 'no',
 			'banners base url'         => $paths['url'],
 			'banners url is same host' => wp_parse_url( $paths['url'], PHP_URL_HOST ) === wp_parse_url( home_url(), PHP_URL_HOST ) ? 'yes' : 'no',
+			'storage mode'             => Banners_OG_Storage::uses_attachments() ? 'attachment (media library)' : 'plain file',
 		];
 	}
 

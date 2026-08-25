@@ -13,6 +13,9 @@ class Banners_OG_Storage {
 	const DIRNAME   = 'banners-og';
 	const MAX_BYTES = 4194304; // 4 MB.
 
+	// Marks the attachments created by the plugin, so uninstall can clean them.
+	const META_MANAGED = '_banners_og_managed';
+
 	/**
 	 * @return array{dir:string, url:string}
 	 */
@@ -57,9 +60,40 @@ class Banners_OG_Storage {
 	}
 
 	/**
+	 * Whether the banners are stored as attachments of the media library.
+	 *
+	 * A site that offloads uploads (S3 and friends) serves that folder from
+	 * another host, and only attachments make that trip: a plain file would be
+	 * published from a bucket that never received it. Everywhere else the
+	 * banners stay out of the library, which is where they belong.
+	 */
+	public static function uses_attachments(): bool {
+		$uploads   = wp_get_upload_dir();
+		$offloaded = wp_parse_url( (string) $uploads['baseurl'], PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST );
+
+		/**
+		 * Filters whether a generated banner becomes an attachment.
+		 */
+		return (bool) apply_filters( 'banners_og_use_attachments', $offloaded );
+	}
+
+	/**
+	 * Stored banners are either a file name or the ID of an attachment.
+	 */
+	private static function is_attachment( string $stored ): bool {
+		return '' !== $stored && ctype_digit( $stored );
+	}
+
+	/**
 	 * Public URL of a stored banner, or null when the file is gone.
 	 */
 	public static function image_url( string $file ): ?string {
+		if ( self::is_attachment( $file ) ) {
+			$url = wp_get_attachment_url( (int) $file );
+
+			return is_string( $url ) && '' !== $url ? $url : null;
+		}
+
 		$file = wp_basename( $file );
 
 		if ( '' === $file ) {
@@ -76,6 +110,12 @@ class Banners_OG_Storage {
 	}
 
 	public static function delete( string $file ): void {
+		if ( self::is_attachment( $file ) ) {
+			wp_delete_attachment( (int) $file, true );
+
+			return;
+		}
+
 		$file = wp_basename( $file );
 
 		if ( '' === $file ) {
@@ -211,15 +251,65 @@ class Banners_OG_Storage {
 		}
 
 		$stored = wp_basename( (string) $upload['file'] );
+		$url    = (string) $upload['url'];
 
-		if ( wp_basename( $old_file ) !== $stored ) {
+		if ( self::uses_attachments() ) {
+			$attachment_id = self::attach( (string) $upload['file'], $url, $slug );
+
+			if ( is_wp_error( $attachment_id ) ) {
+				return $attachment_id;
+			}
+
+			$stored = (string) $attachment_id;
+			$url    = (string) wp_get_attachment_url( $attachment_id );
+		}
+
+		if ( $old_file !== $stored ) {
 			self::delete( $old_file );
 		}
 
 		return [
 			'file' => $stored,
-			'url'  => (string) $upload['url'],
+			'url'  => $url,
 		];
+	}
+
+	/**
+	 * Turns the written file into an attachment, which is what an offload
+	 * plugin listens for to copy it to its bucket and serve it from there.
+	 *
+	 * @return int|WP_Error
+	 */
+	private static function attach( string $path, string $url, string $slug ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		$attachment_id = wp_insert_attachment(
+			[
+				'guid'           => $url,
+				'post_mime_type' => 'image/jpeg',
+				/* translators: %s: banner name, such as og-cover or og-product-12. */
+				'post_title'     => sprintf( __( 'OG banner: %s', 'banners-og' ), $slug ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			],
+			$path,
+			0,
+			true
+		);
+
+		if ( is_wp_error( $attachment_id ) ) {
+			return $attachment_id;
+		}
+
+		update_post_meta( $attachment_id, self::META_MANAGED, 1 );
+
+		// No intermediate sizes: the banner is published whole, and every extra
+		// size would be one more file for the offload plugin to copy.
+		add_filter( 'intermediate_image_sizes_advanced', '__return_empty_array' );
+		wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $path ) );
+		remove_filter( 'intermediate_image_sizes_advanced', '__return_empty_array' );
+
+		return $attachment_id;
 	}
 
 	/**

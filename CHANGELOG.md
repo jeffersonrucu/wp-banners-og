@@ -42,7 +42,10 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
 - Banners deixavam de abrir em site com offload de uploads (S3 e afins): a URL
   apontava para o bucket, que nunca recebe esses arquivos — eles não são
-  attachments — e respondia `AccessDenied`. Agora são servidos pelo próprio site.
+  attachments — e respondia `AccessDenied`. Nesses sites o banner passa a ser
+  gravado como attachment, para o plugin de offload subir e servir; nos demais
+  continua sendo arquivo solto, fora da biblioteca. Filtros
+  `banners_og_use_attachments` e `banners_og_uploads_url`.
 - A foto do produto sumia do banner quando um otimizador ou offload reescrevia a
   URL da imagem: agora o arquivo em `uploads/` responde no lugar.
 
