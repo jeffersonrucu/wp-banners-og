@@ -21,8 +21,37 @@ class Banners_OG_Storage {
 
 		return [
 			'dir' => $uploads['basedir'] . '/' . self::DIRNAME,
-			'url' => $uploads['baseurl'] . '/' . self::DIRNAME,
+			'url' => self::base_url( $uploads ) . '/' . self::DIRNAME,
 		];
+	}
+
+	/**
+	 * Base URL the banners are served from.
+	 *
+	 * They are plain files and not attachments, so an offload plugin (S3 and
+	 * friends) rewrites the uploads URL to its bucket without ever copying
+	 * them there — the bucket would answer 403. When the uploads URL points
+	 * somewhere else, the file is served from the site itself.
+	 *
+	 * @param array<string, mixed> $uploads
+	 */
+	private static function base_url( array $uploads ): string {
+		$base = (string) $uploads['baseurl'];
+
+		if ( wp_parse_url( $base, PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST ) ) {
+			$basedir = (string) $uploads['basedir'];
+			$content = untrailingslashit( WP_CONTENT_DIR );
+
+			if ( 0 === strpos( $basedir, $content ) ) {
+				$base = content_url( substr( $basedir, strlen( $content ) ) );
+			}
+		}
+
+		/**
+		 * Filters the base URL of the generated banners, for a site that serves
+		 * `uploads/` in its own way.
+		 */
+		return untrailingslashit( (string) apply_filters( 'banners_og_uploads_url', $base ) );
 	}
 
 	/**
