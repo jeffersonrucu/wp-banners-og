@@ -255,10 +255,21 @@ class Banners_OG_Templates {
 	/**
 	 * Post types that get the per-content metabox.
 	 *
+	 * Every public post type with an editing screen: anything with a URL of its
+	 * own is something that gets shared, and the meta tags already answer for
+	 * it. Attachments are out — their page is the file, not a banner.
+	 *
 	 * @return array<int, string>
 	 */
 	public static function post_types(): array {
-		$types = apply_filters( 'banners_og_post_types', [ 'post', 'page' ] );
+		$public = get_post_types(
+			[
+				'public'  => true,
+				'show_ui' => true,
+			]
+		);
+
+		$types = apply_filters( 'banners_og_post_types', array_values( array_diff( $public, [ 'attachment' ] ) ) );
 
 		return array_values( array_filter( array_map( 'strval', is_array( $types ) ? $types : [] ) ) );
 	}
@@ -266,10 +277,21 @@ class Banners_OG_Templates {
 	/**
 	 * Taxonomies whose terms get their own banner.
 	 *
+	 * Same rule as the post types: every public taxonomy with an editing
+	 * screen, since each of its terms has an archive of its own. Post formats
+	 * are out — they are a flag on the post, not an archive anyone shares.
+	 *
 	 * @return array<int, string>
 	 */
 	public static function taxonomies(): array {
-		$taxonomies = apply_filters( 'banners_og_taxonomies', [ 'category', 'post_tag' ] );
+		$public = get_taxonomies(
+			[
+				'public'  => true,
+				'show_ui' => true,
+			]
+		);
+
+		$taxonomies = apply_filters( 'banners_og_taxonomies', array_values( array_diff( $public, [ 'post_format' ] ) ) );
 
 		return array_values( array_filter( array_map( 'strval', is_array( $taxonomies ) ? $taxonomies : [] ) ) );
 	}

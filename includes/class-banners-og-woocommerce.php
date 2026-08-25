@@ -16,8 +16,6 @@ class Banners_OG_Woocommerce {
 	const POST_TYPE = 'product';
 
 	public static function init(): void {
-		add_filter( 'banners_og_post_types', [ __CLASS__, 'post_types' ] );
-		add_filter( 'banners_og_taxonomies', [ __CLASS__, 'taxonomies' ] );
 		add_filter( 'banners_og_default_kind_for_taxonomy', [ __CLASS__, 'default_kind_for_taxonomy' ], 10, 2 );
 		add_filter( 'banners_og_term_defaults', [ __CLASS__, 'term_defaults' ], 10, 2 );
 		add_filter( 'banners_og_kinds', [ __CLASS__, 'kinds' ] );
@@ -28,26 +26,6 @@ class Banners_OG_Woocommerce {
 		add_filter( 'banners_og_default_kind_for_post_type', [ __CLASS__, 'default_kind_for_post_type' ], 10, 2 );
 		add_filter( 'banners_og_default_kind_for_context', [ __CLASS__, 'default_kind_for_context' ] );
 		add_action( 'banners_og_enqueue_assets', [ __CLASS__, 'enqueue' ] );
-	}
-
-	/**
-	 * @param array<int, string> $types
-	 *
-	 * @return array<int, string>
-	 */
-	public static function post_types( array $types ): array {
-		$types[] = self::POST_TYPE;
-
-		return array_values( array_unique( $types ) );
-	}
-
-	/**
-	 * @param array<int, string> $taxonomies
-	 *
-	 * @return array<int, string>
-	 */
-	public static function taxonomies( array $taxonomies ): array {
-		return array_values( array_unique( array_merge( $taxonomies, [ 'product_cat', 'product_tag' ] ) ) );
 	}
 
 	public static function default_kind_for_taxonomy( string $kind, string $taxonomy ): string {
