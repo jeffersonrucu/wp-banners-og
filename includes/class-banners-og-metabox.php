@@ -47,6 +47,13 @@ class Banners_OG_Metabox {
 		$fields   = Banners_OG_Templates::fields();
 		$defaults = Banners_OG_Templates::defaults();
 
+		/**
+		 * Filters the layout defaults used as the placeholders of one post, so
+		 * a module can derive them from the content itself.
+		 */
+		$filtered = apply_filters( 'banners_og_post_defaults', $defaults, $post );
+		$defaults = is_array( $filtered ) ? $filtered : $defaults;
+
 		$kind          = (string) $settings['kind'];
 		$kind_defaults = $defaults[ $kind ] ?? $defaults[ Banners_OG_Templates::first_kind() ];
 		$image_url     = (string) ( Banners_OG_Storage::image_url( (string) get_post_meta( $post->ID, Banners_OG_Plugin::META_IMAGE, true ) ) ?? '' );

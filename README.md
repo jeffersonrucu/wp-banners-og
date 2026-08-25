@@ -16,8 +16,10 @@ O plugin não tem marca embutida: paleta, tipografia, logo e símbolo vêm das
 configurações; layouts, campos e textos padrão são filtráveis; e um layout novo
 pode ser registrado de fora, sem tocar no plugin.
 
-Quando um plugin de SEO cuida das meta tags, o banner é entregue a ele em vez de
-ficar sem uso — veja [Meta tags](#meta-tags).
+Com **WooCommerce** ativo, cada produto ganha o próprio banner, com a foto, o
+preço e a categoria do produto — veja [WooCommerce](#woocommerce). E quando um
+plugin de SEO cuida das meta tags, o banner é entregue a ele em vez de ficar sem
+uso — veja [Meta tags](#meta-tags).
 
 **Banners OG** — um card por layout, com preview ao vivo e o arquivo em uso:
 
@@ -141,6 +143,7 @@ Para desligar a ponte e manter a escolha do plugin de SEO, use
 | `feature` | Fundo escuro, conteúdo à esquerda, símbolo em marca d'água. |
 | `article` | Painel escuro à esquerda com símbolo e marca, conteúdo à direita. |
 | `profile` | Centralizado em fundo alternativo, com logo horizontal. |
+| `product` | Conteúdo à esquerda com preço, foto do produto à direita. Só com WooCommerce ativo. |
 
 Exemplo do arquivo final, no layout `cover`:
 
@@ -161,6 +164,46 @@ Ainda assim, `--bog-mark-url` é exposta para quem quiser usar a marca como
 
 ---
 
+## WooCommerce
+
+Com o WooCommerce ativo, `Banners_OG_Woocommerce` entra sozinho e acrescenta:
+
+- o post type `product` na lista do metabox — cada produto ganha o próprio
+  banner, regerado ao salvar, como qualquer post;
+- o layout `product`: conteúdo à esquerda (categoria, nome, preço, resumo) e a
+  foto do produto no painel à direita;
+- o campo **Preço**, disponível em todos os layouts, impresso só pelo `product`;
+- o layout `product` como padrão do post type `product` e dos arquivos de
+  `product_cat` / `product_tag`.
+
+Exemplo do arquivo final, no layout `product`:
+
+![Banner Product gerado, 1200 × 630](.github/screenshots/banner-product.jpg)
+
+Os placeholders do metabox saem do próprio produto: categoria (primeiro termo de
+`product_cat`), resumo (descrição curta, 24 palavras) e preço
+(`get_price_html()`, sem o preço riscado das promoções). Digitar qualquer campo
+sobrescreve; deixar vazio mantém o valor do produto.
+
+O card **Product** na tela *Banners OG* segue valendo para os arquivos da loja,
+onde não existe um produto específico.
+
+Limitações conhecidas:
+
+- **Preço desatualizado.** O banner é regerado quando o produto é salvo. Mudança
+  de preço fora do editor (promoção agendada, edição em massa, importação) não
+  dispara nova geração — o banner continua com o preço antigo até o próximo save.
+  Para não correr o risco, apague o campo Preço no layout.
+- **Foto em CDN.** Uma imagem de outro domínio contamina o canvas e a captura
+  falharia, então ela é descartada e o painel cai no símbolo da marca. Use
+  `banners_og_product_image_url` para devolver uma URL same-origin.
+- **Editor novo de produtos** (o experimental, em blocos) não renderiza metaboxes
+  clássicos. O banner segue funcionando no editor padrão de produtos.
+- **Catálogo existente** não é gerado em lote: hoje o banner nasce ao salvar o
+  produto, um a um.
+
+---
+
 ## Extensão (nível dev)
 
 ### Filtros e actions
@@ -174,9 +217,11 @@ Ainda assim, `--bog-mark-url` é exposta para quem quiser usar a marca como
 | `banners_og_template_defaults` | filtro | por layout | Textos padrão de um layout (`$defaults, $kind`). |
 | `banners_og_default_kind_for_post_type` | filtro | mapa interno | Layout padrão de um post type. |
 | `banners_og_default_kind_for_context` | filtro | por contexto | Layout usado em arquivos e listagens. |
+| `banners_og_post_defaults` | filtro | defaults dos layouts | Placeholders de um post, derivados do conteúdo (`$defaults, $post`). |
 | `banners_og_output_tags` | filtro | `true` (sem plugin de SEO) | Liga/desliga a saída das meta tags. |
 | `banners_og_meta_data` | filtro | array montado | Ajusta título, descrição, URL, tipo e imagem. |
 | `banners_og_seo_bridge` | filtro | `true` | Liga/desliga a entrega do banner ao plugin de SEO. |
+| `banners_og_product_image_url` | filtro | foto do produto | Imagem usada pelo layout `product` (`$url, $product`). |
 | `banners_og_enqueue_assets` | action | — | Enfileira CSS/JS de layouts próprios. |
 
 ### API JavaScript
@@ -309,10 +354,13 @@ banners-og/
 │   ├── class-banners-og-metabox.php
 │   ├── class-banners-og-ajax.php
 │   ├── class-banners-og-meta.php
-│   └── class-banners-og-seo.php       # entrega o banner ao plugin de SEO ativo
+│   ├── class-banners-og-seo.php       # entrega o banner ao plugin de SEO ativo
+│   └── class-banners-og-woocommerce.php
 ├── assets/
 │   ├── css/admin.css             # UI do admin + os 4 layouts
+│   ├── css/woocommerce.css       # layout product
 │   ├── js/banner.js              # registro de layouts, preview, captura, upload
+│   ├── js/woocommerce.js         # renderer do layout product
 │   ├── js/settings.js            # media picker e color inputs
 │   └── vendor/html2canvas/       # 1.4.1 (MIT), versionado de propósito
 ├── bin/

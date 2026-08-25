@@ -19,6 +19,10 @@ class Banners_OG_Plugin {
 		Banners_OG_Seo::init();
 		Banners_OG_Ajax::init();
 
+		if ( class_exists( 'WooCommerce' ) ) {
+			Banners_OG_Woocommerce::init();
+		}
+
 		if ( is_admin() ) {
 			Banners_OG_Admin::init();
 			Banners_OG_Settings::init();

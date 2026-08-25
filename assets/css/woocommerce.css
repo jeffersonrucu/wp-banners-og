@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Banners OG — WooCommerce product layout.
+
+   Same custom properties as the layouts of admin.css, so the product banner
+   follows the palette and the typography of the site.
+   ========================================================================== */
+
+.bog-canvas--product { display: flex; }
+
+.bog-canvas--product .bog-content {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 76px 72px 130px 84px;
+}
+
+.bog-canvas--product .bog-eyebrow {
+  font-size: 15px;
+  letter-spacing: .34em;
+  margin-bottom: 26px;
+}
+
+.bog-canvas--product .bog-title {
+  font-size: 66px;
+  line-height: 1.04;
+}
+
+.bog-canvas--product .bog-price {
+  font-family: var(--bog-font-heading, serif);
+  font-size: 44px;
+  line-height: 1;
+  color: var(--bog-accent, #1f2933);
+  margin-top: 26px;
+}
+
+.bog-canvas--product .bog-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--bog-rule, #cbd2d9);
+  margin: 28px 0;
+}
+
+.bog-canvas--product .bog-sub {
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.bog-canvas--product .bog-footer {
+  position: absolute;
+  left: 84px;
+  right: 72px;
+  bottom: 70px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.bog-canvas--product .bog-brand {
+  font-family: var(--bog-font-heading, serif);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--bog-accent, #1f2933);
+}
+
+.bog-canvas--product .bog-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--bog-rule, #cbd2d9);
+}
+
+.bog-canvas--product .bog-side {
+  position: relative;
+  width: 470px;
+  height: 100%;
+  flex: none;
+  overflow: hidden;
+  background: var(--bog-bg-alt, #ece9e4);
+}
+
+.bog-canvas--product .bog-shot {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Without a product photo the square mark keeps the panel from reading as a
+   rendering failure. */
+.bog-canvas--product .bog-shot--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bog-canvas--product .bog-mark {
+  width: 160px;
+  height: auto;
+  display: block;
+}

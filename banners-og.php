@@ -33,6 +33,7 @@ require_once BANNERS_OG_DIR . 'includes/class-banners-og-ajax.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-admin.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-settings.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-metabox.php';
+require_once BANNERS_OG_DIR . 'includes/class-banners-og-woocommerce.php';
 
 register_activation_hook( __FILE__, [ 'Banners_OG_Activator', 'activate' ] );
 
