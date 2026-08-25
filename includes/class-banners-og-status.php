@@ -154,6 +154,7 @@ class Banners_OG_Status {
 			$out[ $constant ] = is_scalar( $value ) ? (string) $value : gettype( $value );
 		}
 
+		$out['WP-Stateless']           = class_exists( 'wpCloud\\StatelessMedia\\Bootstrap' ) ? 'active' : 'no';
 		$out['upload_dir filtered']    = has_filter( 'upload_dir' ) ? 'yes' : 'no';
 		$out['upload_path option']     = (string) get_option( 'upload_path', '' );
 		$out['upload_url_path option'] = (string) get_option( 'upload_url_path', '' );
@@ -194,9 +195,18 @@ class Banners_OG_Status {
 	 * @param array{dir:string, url:string} $paths
 	 */
 	private static function describe( string $file, array $paths, bool $checking ): string {
-		$exists = file_exists( $paths['dir'] . '/' . wp_basename( $file ) );
-		$url    = (string) ( Banners_OG_Storage::image_url( $file ) ?? '' );
-		$line   = sprintf( '%s | file %s | %s', $file, $exists ? 'found' : 'MISSING', '' !== $url ? $url : 'no url' );
+		if ( ctype_digit( $file ) ) {
+			// Attachment mode: what is stored is the ID, not a file name.
+			$path   = get_attached_file( (int) $file );
+			$exists = is_string( $path ) && '' !== $path && file_exists( $path );
+			$label  = 'attachment #' . $file;
+		} else {
+			$exists = file_exists( $paths['dir'] . '/' . wp_basename( $file ) );
+			$label  = $file;
+		}
+
+		$url  = (string) ( Banners_OG_Storage::image_url( $file ) ?? '' );
+		$line = sprintf( '%s | file %s | %s', $label, $exists ? 'found' : 'MISSING', '' !== $url ? $url : 'no url' );
 
 		if ( ! $checking || '' === $url ) {
 			return $line;
