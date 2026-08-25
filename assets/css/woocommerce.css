@@ -67,6 +67,15 @@
   font-size: 22px;
   line-height: 1;
   color: var(--bog-accent, #1f2933);
+  /* The footer is one line: the signature never wraps, the URL is clamped. */
+  flex: none;
+  white-space: nowrap;
+}
+
+.bog-canvas--product .bog-footer .bog-foot {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .bog-canvas--product .bog-dot {

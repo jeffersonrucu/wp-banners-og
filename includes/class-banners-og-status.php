@@ -140,6 +140,10 @@ class Banners_OG_Status {
 			return 'no image';
 		}
 
+		if ( false !== strpos( $url, 'action=' . Banners_OG_Ajax::IMAGE_ACTION ) ) {
+			return 'yes, served through the site';
+		}
+
 		$same_host = wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( admin_url(), PHP_URL_HOST );
 
 		return $same_host ? 'yes: ' . $url : 'NO, cross-origin: ' . $url;

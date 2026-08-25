@@ -55,7 +55,7 @@
           '<div class="bog-footer">' +
             '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
             '<div class="bog-dot"></div>' +
-            '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
+            '<div class="bog-foot">' + ctx.esc(ctx.clamp(f.foot, 52)) + '</div>' +
           '</div>' +
         '</div>' +
         '<div class="bog-side">' + panel(f, ctx) + '</div>' +

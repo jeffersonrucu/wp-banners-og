@@ -125,9 +125,27 @@ class Banners_OG_Storage {
 			return $url;
 		}
 
-		$file = get_post_meta( $attachment_id, '_wp_attached_file', true );
+		$file  = get_post_meta( $attachment_id, '_wp_attached_file', true );
+		$local = is_string( $file ) && '' !== $file ? self::local_uploads_url( $file ) : '';
 
-		return is_string( $file ) && '' !== $file ? self::local_uploads_url( $file ) : '';
+		// No local copy either: the image only reaches the canvas through the
+		// site itself.
+		return '' !== $local ? $local : self::proxy_url( $attachment_id, $size );
+	}
+
+	/**
+	 * URL that serves an attachment from the domain of the site.
+	 */
+	public static function proxy_url( int $attachment_id, string $size = 'full' ): string {
+		return add_query_arg(
+			[
+				'action'   => Banners_OG_Ajax::IMAGE_ACTION,
+				'id'       => $attachment_id,
+				'size'     => $size,
+				'_wpnonce' => wp_create_nonce( Banners_OG_Plugin::NONCE_ACTION ),
+			],
+			admin_url( 'admin-ajax.php' )
+		);
 	}
 
 	/**

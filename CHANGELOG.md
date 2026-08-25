@@ -51,11 +51,13 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
   `banners_og_use_attachments` e `banners_og_uploads_url`.
 - Imagens de outro domínio (CDN, offload) apareciam no preview e sumiam do
   arquivo gerado — o html2canvas não desenha imagem cross-origin. Vale para a
-  foto do produto e para o logo e o símbolo da marca: agora a cópia local em
-  `uploads/` responde no lugar. O Diagnóstico mostra se as imagens da marca
-  passam.
-- Título e subtítulo longos empurravam o resto do banner para fora do canvas:
-  passam por `clamp()` e o título desce um degrau de corpo conforme o tamanho.
+  foto do produto e para o logo e o símbolo da marca: agora responde a cópia
+  local em `uploads/` e, quando ela não existe, o próprio site serve a imagem
+  por `admin-ajax.php` (só ID de anexo, com `edit_posts` e nonce). O Diagnóstico
+  mostra qual caminho está em uso.
+- Título, subtítulo e rodapé longos empurravam o resto do banner para fora do
+  canvas: passam por `clamp()` e o título desce um degrau de corpo conforme o
+  tamanho. No layout `product` a assinatura não quebra mais em duas linhas.
 - Assets versionados pelo arquivo, e não só pela versão do plugin: dentro de uma
   mesma versão o navegador servia o JS antigo.
 

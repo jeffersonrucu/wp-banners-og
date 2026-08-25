@@ -123,7 +123,7 @@
         '<div class="bog-footer">' +
           '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
           '<div class="bog-dot"></div>' +
-          '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
+          '<div class="bog-foot">' + ctx.esc(ctx.clamp(f.foot, 58)) + '</div>' +
         '</div>' +
       '</div>';
   });
@@ -142,7 +142,7 @@
         '</div>' +
         '<div class="bog-footer">' +
           '<div class="bog-footline"></div>' +
-          '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
+          '<div class="bog-foot">' + ctx.esc(ctx.clamp(f.foot, 58)) + '</div>' +
         '</div>' +
       '</div>';
   });
@@ -162,7 +162,7 @@
           '<div class="bog-title' + ctx.titleSize(title, 32, 58) + '">' + ctx.esc(title) + '</div>' +
           '<div class="bog-divider"></div>' +
           '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 170)) + '</div>' +
-          '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
+          '<div class="bog-foot">' + ctx.esc(ctx.clamp(f.foot, 58)) + '</div>' +
         '</div>' +
       '</div>';
   });
@@ -182,7 +182,7 @@
           '<div class="bog-divider"></div>' +
           '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 150)) + '</div>' +
         '</div>' +
-        '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
+        '<div class="bog-foot">' + ctx.esc(ctx.clamp(f.foot, 58)) + '</div>' +
       '</div>';
   });
 

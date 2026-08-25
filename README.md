@@ -224,9 +224,10 @@ Limitações conhecidas:
 - **Imagem em CDN.** O html2canvas não desenha imagem de outro domínio: ela
   aparece no preview e some do arquivo gerado. Vale para a foto do produto e
   também para o logo e o símbolo da marca. O plugin resolve a URL para a cópia
-  local em `uploads/` quando ela existe; quando não existe, a imagem é
-  descartada em vez de quebrar a captura. **Banners OG › Diagnóstico** diz, em
-  `brand logo drawable` e `brand mark drawable`, se as imagens da marca passam.
+  local em `uploads/` e, quando ela não existe (offload que apaga o arquivo
+  local), serve a imagem pelo próprio site, por `admin-ajax.php`. Esse endpoint
+  aceita **ID de anexo**, nunca URL, e exige `edit_posts` mais nonce.
+  **Banners OG › Diagnóstico** mostra em `brand logo drawable` o caminho em uso.
   `banners_og_product_image_url` força outra URL para a foto do produto.
 - **Editor novo de produtos** (o experimental, em blocos) não renderiza metaboxes
   clássicos. O banner segue funcionando no editor padrão de produtos.

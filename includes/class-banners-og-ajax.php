@@ -10,9 +10,92 @@ if ( ! defined( 'WPINC' ) ) {
 
 class Banners_OG_Ajax {
 
+	const IMAGE_ACTION = 'banners_og_image';
+
 	public static function init(): void {
 		add_action( 'wp_ajax_banners_og_save_default', [ __CLASS__, 'save_default' ] );
 		add_action( 'wp_ajax_banners_og_save_post', [ __CLASS__, 'save_post' ] );
+		add_action( 'wp_ajax_' . self::IMAGE_ACTION, [ __CLASS__, 'image' ] );
+	}
+
+	/**
+	 * Serves an attachment from the domain of the site.
+	 *
+	 * html2canvas refuses to export a canvas touched by a cross-origin image,
+	 * and a site that offloads its media publishes it from another host — with
+	 * no local copy left to point at. Going through here is what puts the logo
+	 * and the product photo inside the generated banner.
+	 *
+	 * It takes an attachment ID and never a URL: an endpoint that fetches what
+	 * it is told to fetch is a server-side request forgery waiting to happen.
+	 */
+	public static function image(): void {
+		check_ajax_referer( Banners_OG_Plugin::NONCE_ACTION );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_die( '', '', [ 'response' => 403 ] );
+		}
+
+		$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+
+		if ( ! $id || ! wp_attachment_is_image( $id ) ) {
+			wp_die( '', '', [ 'response' => 404 ] );
+		}
+
+		$size = isset( $_GET['size'] ) ? sanitize_key( wp_unslash( $_GET['size'] ) ) : 'full';
+		$size = in_array( $size, array_merge( get_intermediate_image_sizes(), [ 'full' ] ), true ) ? $size : 'full';
+
+		$body = self::image_body( $id, $size );
+
+		if ( null === $body ) {
+			wp_die( '', '', [ 'response' => 404 ] );
+		}
+
+		header( 'Content-Type: ' . ( (string) get_post_mime_type( $id ) ?: 'image/jpeg' ) );
+		header( 'Content-Length: ' . strlen( $body ) );
+		header( 'Cache-Control: private, max-age=300' );
+
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary image data, already typed by the header above.
+		echo $body;
+		exit;
+	}
+
+	/**
+	 * The bytes of an attachment: the local file when it is still there, the
+	 * published URL when the media lives somewhere else.
+	 */
+	private static function image_body( int $id, string $size ): ?string {
+		$path = get_attached_file( $id );
+
+		if ( 'full' === $size && is_string( $path ) && '' !== $path && file_exists( $path ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+
+			global $wp_filesystem;
+
+			if ( WP_Filesystem() ) {
+				$contents = $wp_filesystem->get_contents( $path );
+
+				if ( is_string( $contents ) ) {
+					return $contents;
+				}
+			}
+		}
+
+		$url = wp_get_attachment_image_url( $id, $size );
+
+		if ( ! is_string( $url ) || '' === $url ) {
+			return null;
+		}
+
+		$response = wp_remote_get( $url, [ 'timeout' => 10 ] );
+
+		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			return null;
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+
+		return '' !== $body && strlen( $body ) <= Banners_OG_Storage::MAX_BYTES ? $body : null;
 	}
 
 	public static function save_default(): void {
