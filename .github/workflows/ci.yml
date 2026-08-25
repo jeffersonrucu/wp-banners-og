@@ -52,7 +52,7 @@ jobs:
           tools: cs2pr
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
 
       - name: Run PHPCS
         id: phpcs
@@ -76,7 +76,7 @@ jobs:
           tools: none
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
 
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress --error-format=github
