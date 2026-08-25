@@ -115,7 +115,13 @@ o banner passa a ser gravado **como attachment**, e o plugin de offload cuida de
 subir e servir, como faz com qualquer imagem da biblioteca. Sem tamanhos
 intermediários: o banner é publicado inteiro.
 
-A detecção é automática, e os filtros mandam mais que ela:
+A detecção não se contenta com "a URL de uploads está em outro host": um CDN
+*pull* também reescreve essa URL, e nele o arquivo solto funciona, porque o CDN
+busca no servidor de origem. O modo attachment só entra quando há rastro de
+offload de verdade — `uploads` num stream (`s3://`), `upload_url_path` fixado nas
+opções, ou um plugin conhecido (S3 Uploads, WP Offload Media, WP-Stateless).
+
+Os filtros mandam mais que a detecção:
 
 | Filtro | Para quê |
 | --- | --- |

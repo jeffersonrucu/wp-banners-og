@@ -68,13 +68,40 @@ class Banners_OG_Storage {
 	 * banners stay out of the library, which is where they belong.
 	 */
 	public static function uses_attachments(): bool {
-		$uploads   = wp_get_upload_dir();
-		$offloaded = wp_parse_url( (string) $uploads['baseurl'], PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST );
-
 		/**
 		 * Filters whether a generated banner becomes an attachment.
 		 */
-		return (bool) apply_filters( 'banners_og_use_attachments', $offloaded );
+		return (bool) apply_filters( 'banners_og_use_attachments', self::offloaded() );
+	}
+
+	/**
+	 * Whether uploads really live somewhere else.
+	 *
+	 * A different host is not enough to tell: a pull CDN also rewrites the
+	 * uploads URL, and there the plain file is served just fine, because the
+	 * CDN fetches it from the origin. Offloading leaves heavier traces — the
+	 * uploads folder on a stream, the URL pinned by hand in the options, or a
+	 * known plugin.
+	 */
+	private static function offloaded(): bool {
+		$uploads = wp_get_upload_dir();
+
+		if ( wp_is_stream( (string) $uploads['basedir'] ) ) {
+			return true;
+		}
+
+		$same_host = wp_parse_url( (string) $uploads['baseurl'], PHP_URL_HOST ) === wp_parse_url( home_url(), PHP_URL_HOST );
+
+		if ( $same_host ) {
+			return false;
+		}
+
+		return '' !== (string) get_option( 'upload_url_path', '' )
+			|| defined( 'S3_UPLOADS_BUCKET' )
+			|| class_exists( 'Amazon_S3_And_CloudFront' )
+			|| class_exists( 'S3_Uploads' )
+			|| class_exists( 'S3_Uploads\Plugin' )
+			|| class_exists( 'wpCloud\StatelessMedia\Bootstrap' );
 	}
 
 	/**
