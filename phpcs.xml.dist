@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ruleset name="OG Banners">
+    <description>Coding standards for the OG Banners plugin.</description>
+
+    <file>.</file>
+
+    <exclude-pattern>/vendor/*</exclude-pattern>
+    <exclude-pattern>/node_modules/*</exclude-pattern>
+    <exclude-pattern>/assets/*</exclude-pattern>
+    <!-- Build tooling: runs on the CLI, not inside WordPress. -->
+    <exclude-pattern>/bin/*</exclude-pattern>
+    <exclude-pattern>/tests/*</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="parallel" value="8"/>
+    <arg value="sp"/>
+
+    <config name="minimum_wp_version" value="5.9"/>
+    <config name="testVersion" value="7.4-"/>
+
+    <rule ref="WordPress-Core"/>
+    <rule ref="WordPress-Extra"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!--
+        The plugin uses short arrays and short ternaries, so the two WPCS rules
+        that only enforce the classic WordPress syntax are turned off here.
+        Everything about security, correctness and i18n stays enabled.
+    -->
+    <rule ref="Universal.Arrays.DisallowShortArraySyntax">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Universal.Operators.DisallowShortTernary">
+        <severity>0</severity>
+    </rule>
+    <rule ref="WordPress.PHP.YodaConditions">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="banners-og"/>
+            </property>
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array">
+                <element value="banners_og"/>
+                <element value="Banners_OG"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>

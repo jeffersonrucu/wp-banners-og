@@ -1,0 +1,17 @@
+# Everything that is development tooling, not part of the plugin.
+/.editorconfig
+/.distignore
+/.gitattributes
+/.github
+/.gitignore
+/bin
+/composer.json
+/composer.lock
+/dist
+/node_modules
+/phpcs.xml.dist
+/phpstan.neon.dist
+/tests
+/vendor
+/CHANGELOG.md
+/README.md

@@ -1,0 +1,558 @@
+/* ==========================================================================
+   OG Banners — 1200x630 layouts.
+
+   Every color and font comes from the CSS custom properties printed by
+   Banners_OG_Theme::css_variables(). A custom layout should reuse them.
+   ========================================================================== */
+
+.bog-canvas {
+  position: relative;
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+  background: var(--bog-bg, #f7f7f5);
+  font-family: var(--bog-font-body, sans-serif);
+}
+
+/* The canvas itself needs it too: padding on a content-box canvas would push
+   it past 1200x630 and the capture would clip the overflow. */
+.bog-canvas,
+.bog-canvas *,
+.bog-canvas *::before,
+.bog-canvas *::after { box-sizing: border-box; }
+
+.bog-canvas .bog-title {
+  font-family: var(--bog-font-heading, serif);
+  font-weight: 500;
+  letter-spacing: -.015em;
+  color: var(--bog-accent, #1f2933);
+  margin: 0;
+}
+
+.bog-canvas .bog-eyebrow {
+  text-transform: uppercase;
+  color: var(--bog-muted, #9ca3af);
+}
+
+.bog-canvas .bog-sub { color: var(--bog-text, #4b5563); }
+
+.bog-canvas .bog-foot {
+  font-size: 13px;
+  letter-spacing: .14em;
+  color: var(--bog-muted, #9ca3af);
+}
+
+/* Generic geometric detail drawn from the palette: corner brackets. Solid
+   borders instead of gradients or a tiled logo, so the capture is faithful and
+   the result does not depend on the shape of the brand mark. */
+.bog-corner {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 0 solid var(--bog-rule, #cbd2d9);
+  pointer-events: none;
+}
+
+.bog-corner--tl {
+  top: 40px;
+  left: 40px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.bog-corner--tr {
+  top: 40px;
+  right: 40px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.bog-corner--bl {
+  bottom: 40px;
+  left: 40px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.bog-corner--br {
+  bottom: 40px;
+  right: 40px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* ----- Cover ----- */
+
+.bog-canvas--cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* The footer is absolute; reserving its band keeps the block optically
+     centred instead of crowding the bottom edge. */
+  padding-bottom: 116px;
+}
+
+.bog-canvas--cover .bog-content { position: relative; padding: 0 120px; }
+
+.bog-canvas--cover .bog-eyebrow {
+  font-size: 15px;
+  letter-spacing: .42em;
+  margin-bottom: 34px;
+}
+
+.bog-canvas--cover .bog-mark {
+  width: 96px;
+  height: auto;
+  display: block;
+  margin: 0 auto 26px;
+}
+
+.bog-canvas--cover .bog-title {
+  font-size: 104px;
+  line-height: .92;
+}
+
+.bog-canvas--cover .bog-divider {
+  width: 66px;
+  height: 1px;
+  background: var(--bog-rule, #cbd2d9);
+  margin: 34px auto;
+}
+
+.bog-canvas--cover .bog-sub {
+  font-size: 22px;
+  line-height: 1.6;
+  max-width: 660px;
+  margin: 0 auto;
+}
+
+.bog-canvas--cover .bog-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.bog-canvas--cover .bog-brand {
+  font-family: var(--bog-font-heading, serif);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--bog-accent, #1f2933);
+}
+
+.bog-canvas--cover .bog-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--bog-rule, #cbd2d9);
+}
+
+/* ----- Feature ----- */
+
+.bog-canvas--feature { background: var(--bog-dark, #1f2933); }
+
+.bog-canvas--feature .bog-mark-bg {
+  position: absolute;
+  right: -90px;
+  bottom: -140px;
+  width: 560px;
+  height: auto;
+  opacity: .14;
+  pointer-events: none;
+}
+
+.bog-canvas--feature .bog-brand {
+  position: absolute;
+  top: 72px;
+  left: 90px;
+  font-family: var(--bog-font-heading, serif);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+}
+
+.bog-canvas--feature .bog-content {
+  position: absolute;
+  left: 90px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 800px;
+}
+
+.bog-canvas--feature .bog-eyebrow {
+  font-size: 14px;
+  letter-spacing: .32em;
+  margin-bottom: 24px;
+  color: rgba(255, 255, 255, .68);
+}
+
+.bog-canvas--feature .bog-title {
+  font-size: 96px;
+  line-height: .98;
+  color: #fff;
+}
+
+.bog-canvas--feature .bog-sub {
+  font-size: 22px;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 30px 0 0;
+  color: rgba(255, 255, 255, .82);
+}
+
+.bog-canvas--feature .bog-footer {
+  position: absolute;
+  left: 90px;
+  bottom: 66px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.bog-canvas--feature .bog-footline {
+  width: 34px;
+  height: 1px;
+  background: rgba(255, 255, 255, .5);
+}
+
+.bog-canvas--feature .bog-foot { color: rgba(255, 255, 255, .68); }
+
+/* ----- Article ----- */
+
+.bog-canvas--article { display: flex; }
+
+.bog-canvas--article .bog-side {
+  position: relative;
+  width: 420px;
+  height: 100%;
+  flex: none;
+  overflow: hidden;
+  background: var(--bog-dark, #1f2933);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* A light plate keeps any logo readable on the dark panel, and unlike a CSS
+   filter it survives the html2canvas capture. */
+.bog-canvas--article .bog-mark-plate {
+  position: relative;
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bog-canvas--article .bog-mark {
+  width: 120px;
+  height: auto;
+  display: block;
+}
+
+.bog-canvas--article .bog-brand {
+  position: relative;
+  font-size: 13px;
+  letter-spacing: .44em;
+  text-transform: uppercase;
+  padding-left: .44em;
+  color: rgba(255, 255, 255, .88);
+}
+
+.bog-canvas--article .bog-content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 76px 84px;
+}
+
+.bog-canvas--article .bog-eyebrow {
+  font-size: 15px;
+  letter-spacing: .34em;
+  margin-bottom: 26px;
+}
+
+.bog-canvas--article .bog-title {
+  font-size: 78px;
+  line-height: 1.02;
+}
+
+.bog-canvas--article .bog-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--bog-rule, #cbd2d9);
+  margin: 30px 0;
+}
+
+.bog-canvas--article .bog-sub {
+  font-size: 21px;
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+.bog-canvas--article .bog-foot {
+  position: absolute;
+  left: 84px;
+  bottom: 66px;
+}
+
+/* ----- Profile ----- */
+
+.bog-canvas--profile {
+  background: var(--bog-bg-alt, #ece9e4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 96px;
+}
+
+.bog-canvas--profile .bog-content { position: relative; padding: 0 120px; }
+
+.bog-canvas--profile .bog-eyebrow {
+  font-size: 15px;
+  letter-spacing: .42em;
+  margin-bottom: 28px;
+}
+
+.bog-canvas--profile .bog-logo {
+  height: 54px;
+  width: auto;
+  display: block;
+  margin: 0 auto 26px;
+}
+
+.bog-canvas--profile .bog-mark {
+  width: 78px;
+  height: auto;
+  display: block;
+  margin: 0 auto 24px;
+}
+
+.bog-canvas--profile .bog-title {
+  font-size: 92px;
+  line-height: .98;
+}
+
+.bog-canvas--profile .bog-divider {
+  width: 66px;
+  height: 1px;
+  background: var(--bog-rule, #cbd2d9);
+  margin: 32px auto;
+}
+
+.bog-canvas--profile .bog-sub {
+  font-size: 22px;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.bog-canvas--profile .bog-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+}
+
+/* ==========================================================================
+   Admin UI
+   ========================================================================== */
+
+.bog-wrap { max-width: 1080px; }
+
+.bog-intro { max-width: 720px; }
+
+.bog-card {
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 26px;
+}
+
+.bog-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.bog-card__title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.bog-chip {
+  font: 600 10px/1 ui-monospace, monospace;
+  background: #1d2327;
+  color: #fff;
+  padding: 5px 9px;
+  border-radius: 5px;
+}
+
+.bog-dim { font-size: 11px; color: #787c82; }
+
+.bog-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bog-card__body {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .bog-card__body { grid-template-columns: 1fr; }
+}
+
+.bog-fields label { display: block; margin-bottom: 12px; }
+
+.bog-fields label > span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #50575e;
+  margin-bottom: 4px;
+}
+
+.bog-fields input[type="text"],
+.bog-fields textarea,
+.bog-fields select { width: 100%; }
+
+.bog-fields .description {
+  display: block;
+  font-size: 11.5px;
+  color: #787c82;
+  margin-top: 3px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bog-current {
+  font-size: 12px;
+  color: #50575e;
+  margin: 10px 0 0;
+}
+
+.bog-current.is-empty { color: #996a2d; }
+
+.bog-status { font-size: 12px; color: #787c82; }
+
+.bog-status.is-error { color: #b32d2e; }
+
+.bog-preview { min-width: 0; }
+
+.bog-stage-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #dcdcde;
+  background: #f0f0f1;
+}
+
+.bog-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1200px;
+  height: 630px;
+  transform-origin: top left;
+}
+
+.bog-note {
+  margin: 6px 0 10px;
+  padding: 10px 14px;
+  background: #f6f7f7;
+  border-left: 3px solid #2271b1;
+  border-radius: 0 6px 6px 0;
+  color: #50575e;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.bog-metabox .bog-toggle { margin: 4px 0 12px; }
+
+.bog-metabox .bog-custom[hidden] { display: none; }
+
+/* Off-screen area used for the 1200x630 capture. */
+.bog-capture-holder {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Appearance screen */
+
+.bog-color { width: 8em; }
+
+.bog-media__preview img {
+  max-width: 260px;
+  height: auto;
+  display: block;
+  margin: 6px 0;
+  border: 1px solid #dcdcde;
+  border-radius: 6px;
+  background: #f0f0f1;
+}
+
+.bog-media__remove { color: #b32d2e; }
+
+.bog-font-sample {
+  margin: 12px 0 4px;
+  padding: 14px 16px;
+  max-width: 520px;
+  border: 1px solid #dcdcde;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.bog-font-sample__heading {
+  display: block;
+  font-size: 28px;
+  line-height: 1.2;
+  color: #1d2327;
+}
+
+.bog-font-sample__body {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #50575e;
+}
+
+.bog-advanced[hidden] { display: none; }

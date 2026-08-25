@@ -1,0 +1,33 @@
+# Dependências gerenciadas (assets/vendor é versionado de propósito).
+# composer.lock é versionado: só tem dev deps, e mantém o CI reproduzível.
+/vendor/
+/node_modules/
+/package-lock.json
+
+# Build / distribuição
+/dist/
+/build/
+*.zip
+
+# Ambiente
+.env
+.env.*
+!.env.example
+
+# Editores
+.idea/
+.vscode/
+*.sublime-*
+*.code-workspace
+
+# SO
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs e temporários
+*.log
+*.cache
+*.bak
+*.orig
+*~
