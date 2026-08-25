@@ -27,6 +27,8 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
   nome da tela de Aparência como fallback.
 - No layout `product`, os campos **Foto**, **Mostrar a foto** e **Mostrar o
   preço**. O preço não é digitável: vem sempre do produto.
+- O layout `product` assina com a marca (logo horizontal, ou o símbolo) no topo
+  do conteúdo: antes ela só aparecia quando não havia foto.
 - Filtro `banners_og_fields_for_context`, que deixa um campo se apresentar de
   formas diferentes na tela geral e no metabox — é como o campo **Foto** fica
   restrito ao editor do produto, já que na tela geral não há produto algum e o
@@ -56,6 +58,9 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
   local em `uploads/` e, quando ela não existe, o próprio site serve a imagem
   por `admin-ajax.php` (só ID de anexo, com `edit_posts` e nonce). O Diagnóstico
   mostra qual caminho está em uso.
+- O símbolo da marca continuava sumindo do arquivo quando vinha do **ícone do
+  site**: só o campo da tela Aparência passava pelo resolvedor de imagem. O
+  ícone do site é anexo como qualquer outro e agora segue o mesmo caminho.
 - Título, subtítulo e rodapé longos empurravam o resto do banner para fora do
   canvas: passam por `clamp()` e o título desce um degrau de corpo conforme o
   tamanho. No layout `product` a assinatura não quebra mais em duas linhas.

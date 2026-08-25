@@ -44,14 +44,19 @@
     // Product names run long, and the panel leaves the text half the canvas.
     var title = ctx.clamp(f.title, 80);
 
+    // The panel takes the photo, so the brand signs the content side, the way
+    // the other layouts do.
+    var sign = ctx.image(ctx.images.logo || ctx.images.mark, 'bog-sign');
+
     return '' +
       '<div class="bog-canvas bog-canvas--product">' +
         '<div class="bog-content">' +
+          sign +
           '<div class="bog-eyebrow">' + ctx.esc(ctx.clamp(f.eyebrow, 34)) + '</div>' +
-          '<div class="bog-title' + ctx.titleSize(title, 24, 44) + '">' + ctx.esc(title) + '</div>' +
+          '<div class="bog-title' + ctx.titleSize(title, 22, 40) + '">' + ctx.esc(title) + '</div>' +
           (amount ? '<div class="bog-price">' + ctx.esc(amount) + '</div>' : '') +
           '<div class="bog-divider"></div>' +
-          '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 120)) + '</div>' +
+          '<div class="bog-sub">' + ctx.esc(ctx.clamp(f.sub, 105)) + '</div>' +
           '<div class="bog-footer">' +
             '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
             '<div class="bog-dot"></div>' +

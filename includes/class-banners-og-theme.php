@@ -182,7 +182,12 @@ class Banners_OG_Theme {
 			return $url;
 		}
 
-		return (string) get_site_icon_url( 512 );
+		// The site icon is an attachment as well, and going through the same
+		// resolver is what keeps it drawable when the media of the site is
+		// published from another host.
+		$url = self::attachment_url( (int) get_option( 'site_icon' ) );
+
+		return '' !== $url ? $url : (string) get_site_icon_url( 512 );
 	}
 
 	/**

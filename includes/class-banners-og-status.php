@@ -128,7 +128,28 @@ class Banners_OG_Status {
 			'storage mode'             => Banners_OG_Storage::uses_attachments() ? 'attachment (media library)' : 'plain file',
 			'brand logo drawable'      => self::drawable( Banners_OG_Theme::logo_url() ),
 			'brand mark drawable'      => self::drawable( Banners_OG_Theme::mark_url() ),
+			'brand mark source'        => self::mark_source(),
 		];
+	}
+
+	/**
+	 * Which setting the brand mark comes from, since each one reaches the
+	 * canvas by a different route.
+	 */
+	private static function mark_source(): string {
+		$theme = Banners_OG_Theme::get();
+
+		if ( (int) $theme['mark_id'] > 0 ) {
+			return 'Appearance screen, attachment #' . (int) $theme['mark_id'];
+		}
+
+		$icon = (int) get_option( 'site_icon' );
+
+		if ( $icon > 0 ) {
+			return 'site icon, attachment #' . $icon;
+		}
+
+		return 'none';
 	}
 
 	/**
