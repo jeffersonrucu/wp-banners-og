@@ -1,8 +1,9 @@
 /**
  * Banners OG — the WooCommerce product layout.
  *
- * The copy comes from the shared fields; the photo comes from the product
- * being edited, localized by Banners_OG_Woocommerce::enqueue().
+ * Every value comes from the fields: the photo of the product is the
+ * placeholder of the `photo` field, filled in by
+ * Banners_OG_Woocommerce::post_defaults().
  */
 (function (window) {
   'use strict';
@@ -21,14 +22,10 @@
     });
   }
 
-  function photo() {
-    return (window.BannersOGWoo || {}).image || '';
-  }
-
   /* The photo is a background instead of an <img>: html2canvas honours
      background-size, while object-fit comes out stretched. */
-  function panel(ctx) {
-    var url = photo();
+  function panel(f, ctx) {
+    var url = f.show_photo ? (f.photo || '') : '';
 
     if (url) {
       return '<div class="bog-shot" style="background-image:url(\'' + cssUrl(url) + '\')"></div>';
@@ -47,12 +44,12 @@
           '<div class="bog-divider"></div>' +
           '<div class="bog-sub">' + ctx.esc(f.sub) + '</div>' +
           '<div class="bog-footer">' +
-            '<div class="bog-brand">' + ctx.esc(ctx.brand) + '</div>' +
+            '<div class="bog-brand">' + ctx.esc(f.brand || ctx.brand) + '</div>' +
             '<div class="bog-dot"></div>' +
             '<div class="bog-foot">' + ctx.esc(f.foot) + '</div>' +
           '</div>' +
         '</div>' +
-        '<div class="bog-side">' + panel(ctx) + '</div>' +
+        '<div class="bog-side">' + panel(f, ctx) + '</div>' +
       '</div>';
   });
 })(window);

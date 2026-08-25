@@ -49,34 +49,51 @@ class Banners_OG_Woocommerce {
 	}
 
 	/**
-	 * Adds the price, kept right before the footer so the fields read in the
-	 * same order as the banner.
+	 * Adds the price right after the subtitle, so the fields read in the same
+	 * order as the banner, and lets the product layout print the brand too.
 	 *
-	 * @param array<string, array{label:string, type:string, description:string}> $fields
+	 * @param array<string, array<string, mixed>> $fields
 	 *
-	 * @return array<string, array{label:string, type:string, description:string}>
+	 * @return array<string, array<string, mixed>>
 	 */
 	public static function fields( array $fields ): array {
-		$price = [
-			'label'       => __( 'Price', 'banners-og' ),
-			'type'        => 'text',
-			'description' => __( 'Only the Product layout prints it.', 'banners-og' ),
+		$own = [
+			'price'      => [
+				'label'       => __( 'Price', 'banners-og' ),
+				'type'        => 'text',
+				'description' => '',
+				'kinds'       => [ self::KIND ],
+			],
+			'show_photo' => [
+				'label'       => __( 'Show the photo on the banner', 'banners-og' ),
+				'type'        => 'toggle',
+				'description' => '',
+				'kinds'       => [ self::KIND ],
+			],
+			'photo'      => [
+				'label'       => __( 'Photo', 'banners-og' ),
+				'type'        => 'image',
+				'description' => __( 'Empty uses the product image. It has to live on this same domain, otherwise the banner cannot be captured.', 'banners-og' ),
+				'kinds'       => [ self::KIND ],
+			],
 		];
 
-		if ( ! isset( $fields['foot'] ) ) {
-			$fields['price'] = $price;
+		if ( isset( $fields['brand']['kinds'] ) && is_array( $fields['brand']['kinds'] ) ) {
+			$fields['brand']['kinds'][] = self::KIND;
+		}
 
-			return $fields;
+		if ( ! isset( $fields['sub'] ) ) {
+			return array_merge( $fields, $own );
 		}
 
 		$out = [];
 
 		foreach ( $fields as $key => $field ) {
-			if ( 'foot' === $key ) {
-				$out['price'] = $price;
-			}
-
 			$out[ $key ] = $field;
+
+			if ( 'sub' === $key ) {
+				$out = array_merge( $out, $own );
+			}
 		}
 
 		return $out;
@@ -95,10 +112,11 @@ class Banners_OG_Woocommerce {
 		return array_merge(
 			$defaults,
 			[
-				'eyebrow' => __( 'Store', 'banners-og' ),
-				'title'   => (string) get_bloginfo( 'name' ),
-				'sub'     => (string) get_bloginfo( 'description' ),
-				'foot'    => Banners_OG_Templates::site_host(),
+				'eyebrow'    => __( 'Store', 'banners-og' ),
+				'title'      => (string) get_bloginfo( 'name' ),
+				'sub'        => (string) get_bloginfo( 'description' ),
+				'show_photo' => '1',
+				'foot'       => Banners_OG_Templates::site_host(),
 			]
 		);
 	}
@@ -124,6 +142,7 @@ class Banners_OG_Woocommerce {
 				'eyebrow' => self::category( $post ),
 				'sub'     => self::summary( $product ),
 				'price'   => self::price( $product ),
+				'photo'   => self::image_url( $product ),
 			],
 			static function ( string $value ): bool {
 				return '' !== $value;
@@ -162,21 +181,6 @@ class Banners_OG_Woocommerce {
 			BANNERS_OG_VERSION,
 			true
 		);
-
-		wp_localize_script(
-			'banners-og-woocommerce',
-			'BannersOGWoo',
-			[ 'image' => self::image_url( self::current_product() ) ]
-		);
-	}
-
-	/**
-	 * Product of the screen being edited, if the screen is a product at all.
-	 */
-	private static function current_product(): ?WC_Product {
-		$post = get_post();
-
-		return $post instanceof WP_Post ? self::product( $post ) : null;
 	}
 
 	private static function product( WP_Post $post ): ?WC_Product {
@@ -193,9 +197,14 @@ class Banners_OG_Woocommerce {
 		$image_id = null !== $product ? (int) $product->get_image_id() : 0;
 		$url      = $image_id > 0 ? (string) wp_get_attachment_image_url( $image_id, 'large' ) : '';
 
-		// A cross-origin photo taints the canvas and html2canvas cannot export
-		// it, so a file served from another host (a CDN) is dropped instead.
-		if ( '' !== $url && wp_parse_url( $url, PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST ) ) {
+		// Image optimizers and offload plugins rewrite attachment URLs to a
+		// CDN, and a cross-origin photo taints the canvas: the file under
+		// uploads/ answers in its place.
+		if ( '' !== $url && ! self::same_origin( $url ) ) {
+			$url = self::uploads_url( $image_id );
+		}
+
+		if ( '' !== $url && ! self::same_origin( $url ) ) {
 			$url = '';
 		}
 
@@ -204,6 +213,26 @@ class Banners_OG_Woocommerce {
 		 * same-origin, otherwise the capture fails.
 		 */
 		return (string) apply_filters( 'banners_og_product_image_url', $url, $product );
+	}
+
+	/**
+	 * The capture runs in the admin, so that is the origin the photo has to
+	 * match.
+	 */
+	private static function same_origin( string $url ): bool {
+		return wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( admin_url(), PHP_URL_HOST );
+	}
+
+	private static function uploads_url( int $image_id ): string {
+		$file = get_post_meta( $image_id, '_wp_attached_file', true );
+
+		if ( ! is_string( $file ) || '' === $file ) {
+			return '';
+		}
+
+		$uploads = wp_get_upload_dir();
+
+		return $uploads['baseurl'] . '/' . ltrim( $file, '/' );
 	}
 
 	private static function price( WC_Product $product ): string {
