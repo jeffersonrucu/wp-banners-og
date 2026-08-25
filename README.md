@@ -97,6 +97,18 @@ Depois de ativar:
 3. Ao **salvar** o post (Gutenberg ou editor clássico), o JS gera o banner e
    substitui o arquivo anterior — o botão *"Generate banner now"* faz o mesmo sob demanda.
 
+### Fluxo por termo
+
+Categorias e tags têm o próprio banner, editado na tela de edição do termo. Sem
+customização, o banner usa o **nome** e a **descrição** do termo, e é regerado a
+cada *Atualizar*. As taxonomias suportadas saem de `banners_og_taxonomies`
+(`category` e `post_tag`, mais `product_cat` e `product_tag` com WooCommerce).
+
+A descrição do termo também vira a `og:description` do arquivo.
+
+A criação pela coluna da esquerda da tela de categorias é AJAX e não comporta o
+gerador: o banner nasce no primeiro *Atualizar* da categoria já criada.
+
 ### Armazenamento
 
 Fora de sites com offload (veja abaixo), os banners **não** entram na biblioteca
@@ -199,8 +211,9 @@ Com o WooCommerce ativo, `Banners_OG_Woocommerce` entra sozinho e acrescenta:
 - os campos **Mostrar o preço**, **Mostrar a foto** e **Foto** (media picker),
   que só aparecem no layout `product`. O preço nunca é digitado: é sempre o
   preço atual do produto, e o campo só diz se ele é impresso;
-- o layout `product` como padrão do post type `product` e dos arquivos de
-  `product_cat` / `product_tag`.
+- o layout `product` como padrão do post type `product` e das taxonomias
+  `product_cat` / `product_tag`, que também ganham banner por termo — com a
+  imagem da categoria e sem o preço, que ali não teria de qual produto falar.
 
 Exemplo do arquivo final, no layout `product`:
 
@@ -252,6 +265,7 @@ issue. É por onde começar quando o `og:image` não abre.
 | Hook | Tipo | Default | Uso |
 | --- | --- | --- | --- |
 | `banners_og_post_types` | filtro | `['post', 'page']` | Onde o metabox aparece. |
+| `banners_og_taxonomies` | filtro | `['category', 'post_tag']` | Taxonomias com banner por termo. |
 | `banners_og_kinds` | filtro | 4 layouts | Adiciona/remove layouts (`kind => rótulo`). |
 | `banners_og_fields` | filtro | eyebrow, title, sub, foot | Campos de texto dos layouts. |
 | `banners_og_font_presets` | filtro | 4 pares tipográficos | Pares oferecidos na tela de Aparência. |
@@ -259,6 +273,8 @@ issue. É por onde começar quando o `og:image` não abre.
 | `banners_og_default_kind_for_post_type` | filtro | mapa interno | Layout padrão de um post type. |
 | `banners_og_default_kind_for_context` | filtro | por contexto | Layout usado em arquivos e listagens. |
 | `banners_og_post_defaults` | filtro | defaults dos layouts | Placeholders de um post, derivados do conteúdo (`$defaults, $post`). |
+| `banners_og_term_defaults` | filtro | defaults dos layouts | O mesmo para um termo (`$defaults, $term`). |
+| `banners_og_default_kind_for_taxonomy` | filtro | mapa interno | Layout padrão de uma taxonomia. |
 | `banners_og_output_tags` | filtro | `true` (sem plugin de SEO) | Liga/desliga a saída das meta tags. |
 | `banners_og_meta_data` | filtro | array montado | Ajusta título, descrição, URL, tipo e imagem. |
 | `banners_og_seo_bridge` | filtro | `true` | Liga/desliga a entrega do banner ao plugin de SEO. |
@@ -419,6 +435,7 @@ banners-og/
 │   ├── class-banners-og-settings.php
 │   ├── class-banners-og-status.php    # tela de diagnóstico
 │   ├── class-banners-og-metabox.php
+│   ├── class-banners-og-termbox.php   # banner por categoria/tag
 │   ├── class-banners-og-ajax.php
 │   ├── class-banners-og-meta.php
 │   ├── class-banners-og-seo.php       # entrega o banner ao plugin de SEO ativo

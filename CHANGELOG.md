@@ -3,6 +3,28 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [2.2.0]
+
+### Added
+
+- **Banner por termo**: categorias e tags ganham o próprio banner, editado na tela
+  de edição do termo e regerado ao atualizar — antes todos os arquivos dividiam o
+  banner padrão do layout. Vale para `category` e `post_tag`, mais `product_cat` e
+  `product_tag` quando o WooCommerce está ativo.
+- Os placeholders saem do próprio termo: nome, descrição e, em categoria de
+  produto, a imagem da categoria. O layout `product` numa categoria já vem sem
+  preço, que ali não teria de qual produto falar.
+- A descrição do termo passa a alimentar a `og:description` do arquivo, no lugar
+  da tagline do site.
+- Filtros `banners_og_taxonomies`, `banners_og_default_kind_for_taxonomy` e
+  `banners_og_term_defaults`.
+- O Diagnóstico lista também os banners de termos.
+
+### Notes
+
+- A criação de categoria pela coluna da esquerda é AJAX e não comporta o gerador:
+  o banner nasce no primeiro **Atualizar** da categoria já criada.
+
 ## [2.1.0]
 
 ### Added

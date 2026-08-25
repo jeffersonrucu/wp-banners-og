@@ -4,7 +4,7 @@ Tags: open graph, og image, twitter card, social sharing, woocommerce
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -21,7 +21,7 @@ an image extension on the server nor a third-party rendering service.
 
 * A default banner per layout, edited on the *Banners OG* screen.
 * A per-content banner for every supported post type, rebuilt automatically when
-  you save the post.
+  you save the post, and one for every category and tag.
 * `og:*` and `twitter:*` meta tags on the front end, skipped automatically when
   Yoast SEO, Rank Math, All in One SEO or SEOPress is active — and the banner is
   handed over to that plugin instead, so it is the image that gets shared.
@@ -95,6 +95,14 @@ Yes. Register it with the `banners_og_kinds` filter, add its renderer with
 `banners_og_enqueue_assets` action. See README.md.
 
 == Changelog ==
+
+= 2.2.0 =
+
+* Categories and tags get their own banner, rebuilt when you update the term —
+  including WooCommerce product categories and tags.
+* The term description now feeds the og:description of its archive.
+* New filters: `banners_og_taxonomies`, `banners_og_default_kind_for_taxonomy`
+  and `banners_og_term_defaults`.
 
 = 2.1.0 =
 
