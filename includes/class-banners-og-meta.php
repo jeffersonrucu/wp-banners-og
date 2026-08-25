@@ -99,6 +99,15 @@ class Banners_OG_Meta {
 			$term = get_queried_object();
 			$link = $term instanceof WP_Term ? get_term_link( $term ) : '';
 			$url  = is_string( $link ) && '' !== $link ? $link : $url;
+
+			if ( $term instanceof WP_Term ) {
+				$settings = Banners_OG_Termbox::get_term_settings( $term->term_id, $term->taxonomy );
+				$about    = ! empty( $settings['enabled'] ) && ! empty( $settings['sub'] )
+					? (string) $settings['sub']
+					: wp_strip_all_tags( (string) $term->description );
+
+				$description = '' !== trim( $about ) ? $about : $description;
+			}
 		} elseif ( is_author() ) {
 			$author = get_queried_object();
 			$url    = $author instanceof WP_User ? (string) get_author_posts_url( $author->ID ) : $url;
@@ -119,12 +128,29 @@ class Banners_OG_Meta {
 	 * @return array{url:string, width:int, height:int, mime:string}|null
 	 */
 	public static function current_image(): ?array {
-		if ( is_singular() ) {
-			$post = get_queried_object();
+		$queried = get_queried_object();
 
-			if ( $post instanceof WP_Post ) {
-				return self::post_image( $post->ID );
-			}
+		if ( is_singular() && $queried instanceof WP_Post ) {
+			return self::post_image( $queried->ID );
+		}
+
+		if ( ( is_category() || is_tag() || is_tax() ) && $queried instanceof WP_Term ) {
+			return self::term_image( $queried );
+		}
+
+		return self::default_image( Banners_OG_Templates::default_kind_for_context() );
+	}
+
+	/**
+	 * Banner of a term, falling back to the default of its layout.
+	 *
+	 * @return array{url:string, width:int, height:int, mime:string}|null
+	 */
+	private static function term_image( WP_Term $term ): ?array {
+		$image = self::payload( (string) get_term_meta( $term->term_id, Banners_OG_Plugin::META_IMAGE, true ) );
+
+		if ( $image ) {
+			return $image;
 		}
 
 		return self::default_image( Banners_OG_Templates::default_kind_for_context() );

@@ -263,6 +263,29 @@ class Banners_OG_Templates {
 		return array_values( array_filter( array_map( 'strval', is_array( $types ) ? $types : [] ) ) );
 	}
 
+	/**
+	 * Taxonomies whose terms get their own banner.
+	 *
+	 * @return array<int, string>
+	 */
+	public static function taxonomies(): array {
+		$taxonomies = apply_filters( 'banners_og_taxonomies', [ 'category', 'post_tag' ] );
+
+		return array_values( array_filter( array_map( 'strval', is_array( $taxonomies ) ? $taxonomies : [] ) ) );
+	}
+
+	public static function default_kind_for_taxonomy( string $taxonomy ): string {
+		$map = [
+			'category' => 'article',
+			'post_tag' => 'article',
+		];
+
+		$kind = apply_filters( 'banners_og_default_kind_for_taxonomy', $map[ $taxonomy ] ?? 'cover', $taxonomy );
+		$kind = sanitize_key( (string) $kind );
+
+		return self::is_kind( $kind ) ? $kind : self::first_kind();
+	}
+
 	public static function default_kind_for_post_type( string $post_type ): string {
 		$map = [
 			'post' => 'article',

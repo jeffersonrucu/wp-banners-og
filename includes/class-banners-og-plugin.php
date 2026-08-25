@@ -28,6 +28,7 @@ class Banners_OG_Plugin {
 			Banners_OG_Settings::init();
 			Banners_OG_Status::init();
 			Banners_OG_Metabox::init();
+			Banners_OG_Termbox::init();
 		}
 	}
 

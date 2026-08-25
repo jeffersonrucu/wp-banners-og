@@ -14,6 +14,9 @@ delete_option( 'banners_og_theme' );
 delete_post_meta_by_key( '_banners_og' );
 delete_post_meta_by_key( '_banners_og_image' );
 
+delete_metadata( 'term', 0, '_banners_og', '', true );
+delete_metadata( 'term', 0, '_banners_og_image', '', true );
+
 $banners_og_attachments = get_posts(
 	[
 		'post_type'      => 'attachment',

@@ -15,6 +15,7 @@ class Banners_OG_Ajax {
 	public static function init(): void {
 		add_action( 'wp_ajax_banners_og_save_default', [ __CLASS__, 'save_default' ] );
 		add_action( 'wp_ajax_banners_og_save_post', [ __CLASS__, 'save_post' ] );
+		add_action( 'wp_ajax_banners_og_save_term', [ __CLASS__, 'save_term' ] );
 		add_action( 'wp_ajax_' . self::IMAGE_ACTION, [ __CLASS__, 'image' ] );
 	}
 
@@ -172,6 +173,50 @@ class Banners_OG_Ajax {
 
 		if ( $image ) {
 			update_post_meta( $post_id, Banners_OG_Plugin::META_IMAGE, $image['file'] );
+		}
+
+		wp_send_json_success(
+			[
+				'message'  => __( 'Banner updated.', 'banners-og' ),
+				'imageUrl' => $image['url'] ?? '',
+			]
+		);
+	}
+
+	public static function save_term(): void {
+		check_ajax_referer( Banners_OG_Plugin::NONCE_ACTION, 'nonce' );
+
+		$term_id = isset( $_POST['term_id'] ) ? absint( $_POST['term_id'] ) : 0;
+		$term    = $term_id ? get_term( $term_id ) : null;
+
+		if ( ! $term instanceof WP_Term || ! in_array( $term->taxonomy, Banners_OG_Templates::taxonomies(), true ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unsupported content.', 'banners-og' ) ], 400 );
+		}
+
+		if ( ! current_user_can( 'edit_term', $term_id ) ) {
+			wp_send_json_error( [ 'message' => __( 'You are not allowed to do this.', 'banners-og' ) ], 403 );
+		}
+
+		$payload = self::read_payload();
+		$kind    = $payload['kind'];
+
+		$settings            = $payload['fields'];
+		$settings['enabled'] = empty( $_POST['enabled'] ) ? 0 : 1;
+		$settings['kind']    = Banners_OG_Templates::is_kind( $kind )
+			? $kind
+			: Banners_OG_Templates::default_kind_for_taxonomy( $term->taxonomy );
+
+		update_term_meta( $term_id, Banners_OG_Plugin::META_SETTINGS, $settings );
+
+		$old_file = (string) get_term_meta( $term_id, Banners_OG_Plugin::META_IMAGE, true );
+		$image    = Banners_OG_Storage::receive( 'og-' . $term->taxonomy . '-' . $term_id, $old_file );
+
+		if ( is_wp_error( $image ) ) {
+			self::fail( $image );
+		}
+
+		if ( $image ) {
+			update_term_meta( $term_id, Banners_OG_Plugin::META_IMAGE, $image['file'] );
 		}
 
 		wp_send_json_success(

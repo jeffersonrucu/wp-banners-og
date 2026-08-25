@@ -192,8 +192,9 @@
 
   function Editor(root) {
     this.root = root;
-    this.context = root.dataset.context; // 'default' | 'post'
+    this.context = root.dataset.context; // 'default' | 'post' | 'term'
     this.postId = parseInt(root.dataset.postId || '0', 10);
+    this.termId = parseInt(root.dataset.termId || '0', 10);
     this.defaults = root.dataset.defaults ? JSON.parse(root.dataset.defaults) : null;
     this.postTitle = root.dataset.postTitle || '';
     this.footPlaceholder = root.dataset.footPlaceholder || '';
@@ -215,6 +216,11 @@
     this.observeResize();
   }
 
+  /** A post or a term: one content with a banner of its own. */
+  Editor.prototype.isContent = function () {
+    return this.context === 'post' || this.context === 'term';
+  };
+
   Editor.prototype.field = function (name) {
     return this.root.querySelector('.bog-field[data-field="' + name + '"]');
   };
@@ -230,7 +236,7 @@
       return this.root.dataset.kind;
     }
 
-    // Without customization the post uses the default layout of its type.
+    // Without customization the content uses the default layout of its type.
     if (!this.customized()) {
       return this.root.dataset.autoKind || this.root.dataset.kind || '';
     }
@@ -244,8 +250,19 @@
     return !!(this.enabledInput && this.enabledInput.checked);
   };
 
-  /** Post title as it is right now (block editor, classic editor or fallback). */
+  /** The name field of the term screen, on either of its two forms. */
+  Editor.prototype.termNameInput = function () {
+    return document.getElementById('name') || document.getElementById('tag-name');
+  };
+
+  /** Title as it is right now: post editor, term form, or the saved one. */
   Editor.prototype.liveTitle = function () {
+    if (this.context === 'term') {
+      var name = this.termNameInput();
+
+      return name && name.value.trim() ? name.value.trim() : this.postTitle;
+    }
+
     var wp = window.wp;
 
     if (wp && wp.data && wp.data.select && wp.data.select('core/editor')) {
@@ -302,7 +319,7 @@
 
     // Automatic mode: ignores the hidden inputs and builds the banner from the
     // layout defaults plus the post title.
-    if (this.context === 'post' && !this.customized()) {
+    if (this.isContent() && !this.customized()) {
       var defaults = (this.defaults && this.defaults[this.kind()]) || {};
 
       keys.forEach(function (key) {
@@ -336,7 +353,7 @@
 
   /** In the metabox the placeholders follow the selected layout. */
   Editor.prototype.syncPlaceholders = function () {
-    if (this.context !== 'post' || !this.defaults) {
+    if (!this.isContent() || !this.defaults) {
       return;
     }
 
@@ -480,6 +497,10 @@
 
     if (this.context === 'default') {
       body.append('action', 'banners_og_save_default');
+    } else if (this.context === 'term') {
+      body.append('action', 'banners_og_save_term');
+      body.append('term_id', String(this.termId));
+      body.append('enabled', this.customized() ? '1' : '');
     } else {
       body.append('action', 'banners_og_save_post');
       body.append('post_id', String(this.postId));
@@ -674,7 +695,20 @@
       });
     }
 
-    if (this.context !== 'post') {
+    if (!this.isContent()) {
+      return;
+    }
+
+    if (this.context === 'term') {
+      var name = this.termNameInput();
+
+      if (name) {
+        name.addEventListener('input', function () {
+          self.syncPlaceholders();
+          self.render();
+        });
+      }
+
       return;
     }
 
@@ -711,32 +745,8 @@
    * Rebuild the banner when the post is saved
    * ------------------------------------------------------------------- */
 
-  function hookPostSave(editor) {
-    var wp = window.wp;
-
-    // Block editor: as soon as the save finishes, rebuild this banner.
-    if (wp && wp.data && wp.data.select && wp.data.select('core/editor')) {
-      var wasSaving = false;
-
-      wp.data.subscribe(function () {
-        var store = wp.data.select('core/editor');
-        var saving = store.isSavingPost() && !store.isAutosavingPost();
-
-        if (wasSaving && !saving && !editor.uploading) {
-          editor.syncPlaceholders();
-          editor.render();
-          editor.generateAndSave();
-        }
-
-        wasSaving = saving;
-      });
-
-      return;
-    }
-
-    // Classic editor: hold the submit, build the banner, then submit.
-    var form = document.getElementById('post');
-
+  /** Holds a plain form submit, builds the banner, then submits it. */
+  function hookFormSave(editor, form) {
     if (!form) {
       return;
     }
@@ -764,6 +774,39 @@
     });
   }
 
+  function hookSave(editor) {
+    if (editor.context === 'term') {
+      hookFormSave(editor, document.getElementById('edittag'));
+
+      return;
+    }
+
+    var wp = window.wp;
+
+    // Block editor: as soon as the save finishes, rebuild this banner.
+    if (wp && wp.data && wp.data.select && wp.data.select('core/editor')) {
+      var wasSaving = false;
+
+      wp.data.subscribe(function () {
+        var store = wp.data.select('core/editor');
+        var saving = store.isSavingPost() && !store.isAutosavingPost();
+
+        if (wasSaving && !saving && !editor.uploading) {
+          editor.syncPlaceholders();
+          editor.render();
+          editor.generateAndSave();
+        }
+
+        wasSaving = saving;
+      });
+
+      return;
+    }
+
+    // Classic editor: hold the submit, build the banner, then submit.
+    hookFormSave(editor, document.getElementById('post'));
+  }
+
   function boot() {
     var editors = document.querySelectorAll('.bog-editor');
 
@@ -776,8 +819,8 @@
 
       var editor = new Editor(root);
 
-      if (editor.context === 'post') {
-        hookPostSave(editor);
+      if (editor.isContent()) {
+        hookSave(editor);
       }
     });
   }
