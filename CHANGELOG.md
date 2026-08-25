@@ -28,6 +28,8 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
 - No layout `product`, os campos **Foto** e **Mostrar a foto no banner**: dá para
   trocar a imagem ou desligar o painel.
 - Filtro `banners_og_uploads_url`, para servir os banners de outro lugar.
+- Tela **Diagnóstico**: onde os banners são gravados, a URL publicada, o status
+  HTTP dessa URL e os sinais de offload de uploads, com relatório em texto puro.
 
 ### Changed
 

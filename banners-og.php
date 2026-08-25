@@ -32,6 +32,7 @@ require_once BANNERS_OG_DIR . 'includes/class-banners-og-seo.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-ajax.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-admin.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-settings.php';
+require_once BANNERS_OG_DIR . 'includes/class-banners-og-status.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-metabox.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-woocommerce.php';
 

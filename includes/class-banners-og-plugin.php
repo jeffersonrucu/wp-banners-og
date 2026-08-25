@@ -26,6 +26,7 @@ class Banners_OG_Plugin {
 		if ( is_admin() ) {
 			Banners_OG_Admin::init();
 			Banners_OG_Settings::init();
+			Banners_OG_Status::init();
 			Banners_OG_Metabox::init();
 		}
 	}

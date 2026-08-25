@@ -213,6 +213,13 @@ Limitações conhecidas:
 - **Catálogo existente** não é gerado em lote: hoje o banner nasce ao salvar o
   produto, um a um.
 
+### Diagnóstico
+
+**Banners OG › Diagnóstico** mostra onde os banners são gravados, qual URL eles
+publicam e — no botão *Request the banner URLs now* — o status HTTP que essa URL
+devolve de verdade. O relatório no fim da tela é texto puro, para colar num
+issue. É por onde começar quando o `og:image` não abre.
+
 ---
 
 ## Extensão (nível dev)
@@ -380,6 +387,7 @@ banners-og/
 │   ├── class-banners-og-activator.php
 │   ├── class-banners-og-admin.php
 │   ├── class-banners-og-settings.php
+│   ├── class-banners-og-status.php    # tela de diagnóstico
 │   ├── class-banners-og-metabox.php
 │   ├── class-banners-og-ajax.php
 │   ├── class-banners-og-meta.php
