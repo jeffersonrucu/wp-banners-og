@@ -14,12 +14,18 @@ class Banners_OG_Termbox {
 	const NONCE_ACTION = 'banners_og_termbox';
 
 	public static function init(): void {
-		foreach ( Banners_OG_Templates::taxonomies() as $taxonomy ) {
-			add_action( $taxonomy . '_edit_form', [ __CLASS__, 'render' ], 10, 2 );
-		}
+		// The form hook carries the name of the taxonomy, and a custom one is
+		// only registered on `init` — asking any earlier would miss it.
+		add_action( 'init', [ __CLASS__, 'register_forms' ], 99 );
 
 		add_action( 'edited_term', [ __CLASS__, 'save' ], 10, 3 );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue' ] );
+	}
+
+	public static function register_forms(): void {
+		foreach ( Banners_OG_Templates::taxonomies() as $taxonomy ) {
+			add_action( $taxonomy . '_edit_form', [ __CLASS__, 'render' ], 10, 2 );
+		}
 	}
 
 	public static function enqueue( string $hook ): void {
