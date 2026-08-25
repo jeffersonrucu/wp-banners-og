@@ -225,6 +225,13 @@ class Banners_OG_Status {
 			$out[ 'post ' . $post_id . ': ' . get_the_title( $post_id ) ] = self::describe( $file, $paths, $checking );
 		}
 
+		foreach ( self::recent_terms() as $term_id => $file ) {
+			$term = get_term( $term_id );
+			$name = $term instanceof WP_Term ? $term->name : (string) $term_id;
+
+			$out[ 'term ' . $term_id . ': ' . $name ] = self::describe( $file, $paths, $checking );
+		}
+
 		if ( [] === $out ) {
 			$out[ __( 'No banner generated yet', 'banners-og' ) ] = '—';
 		}
@@ -285,6 +292,29 @@ class Banners_OG_Status {
 
 		foreach ( $posts as $post_id ) {
 			$out[ (int) $post_id ] = (string) get_post_meta( (int) $post_id, Banners_OG_Plugin::META_IMAGE, true );
+		}
+
+		return $out;
+	}
+
+	/**
+	 * @return array<int, string>
+	 */
+	private static function recent_terms(): array {
+		$terms = get_terms(
+			[
+				'taxonomy'   => Banners_OG_Templates::taxonomies(),
+				'hide_empty' => false,
+				'number'     => 5,
+				'meta_key'   => Banners_OG_Plugin::META_IMAGE, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- diagnostics screen, run by hand.
+				'fields'     => 'ids',
+			]
+		);
+
+		$out = [];
+
+		foreach ( is_array( $terms ) ? $terms : [] as $term_id ) {
+			$out[ (int) $term_id ] = (string) get_term_meta( (int) $term_id, Banners_OG_Plugin::META_IMAGE, true );
 		}
 
 		return $out;
