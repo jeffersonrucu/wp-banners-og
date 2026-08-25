@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="OG Banners">
-    <description>Coding standards for the OG Banners plugin.</description>
+<ruleset name="Banners OG">
+    <description>Coding standards for the Banners OG plugin.</description>
 
     <file>.</file>
 

@@ -1,6 +1,6 @@
-=== OG Banners ===
+=== Banners OG ===
 Contributors: jeffersonrucu
-Tags: open graph, og-image, social sharing, share image, seo
+Tags: open graph, og image, twitter card, social sharing, share image
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -12,14 +12,14 @@ Builds 1200x630 Open Graph banners in the WordPress admin and publishes them as 
 
 == Description ==
 
-OG Banners renders your sharing images inside the WordPress admin. The banner is
+Banners OG renders your sharing images inside the WordPress admin. The banner is
 laid out in HTML and CSS, captured in the browser with html2canvas and posted back
 as a JPEG. PHP only validates the file and stores it, so the plugin needs neither
 an image extension on the server nor a third-party rendering service.
 
 **What you get**
 
-* A default banner per layout, edited on the *OG Banners* screen.
+* A default banner per layout, edited on the *Banners OG* screen.
 * A per-content banner for every supported post type, rebuilt automatically when
   you save the post.
 * `og:*` and `twitter:*` meta tags on the front end, skipped automatically when
@@ -48,9 +48,9 @@ The capture step uses html2canvas 1.4.1 (MIT), bundled in
 == Installation ==
 
 1. Upload the plugin to `wp-content/plugins/banners-og` and activate it.
-2. Open **OG Banners > Appearance** and set the palette, the font stacks and the
+2. Open **Banners OG > Appearance** and set the palette, the font stacks and the
    brand images.
-3. Open **OG Banners**, review the copy of each layout and click *Generate and
+3. Open **Banners OG**, review the copy of each layout and click *Generate and
    save banner*.
 4. Posts and pages get their own banner automatically when you save them.
 

@@ -1,4 +1,4 @@
-# OG Banners
+# Banners OG
 
 [![CI](https://github.com/jeffersonrucu/wp-banners-og/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffersonrucu/wp-banners-og/actions/workflows/ci.yml)
 [![License: GPL v2+](https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg)](LICENSE)
@@ -16,9 +16,9 @@ O plugin não tem marca embutida: paleta, tipografia, logo e símbolo vêm das
 configurações; layouts, campos e textos padrão são filtráveis; e um layout novo
 pode ser registrado de fora, sem tocar no plugin.
 
-**OG Banners** — um card por layout, com preview ao vivo e o arquivo em uso:
+**Banners OG** — um card por layout, com preview ao vivo e o arquivo em uso:
 
-![Tela OG Banners com os quatro layouts](.github/screenshots/banners.png)
+![Tela Banners OG com os quatro layouts](.github/screenshots/banners.png)
 
 **Aparência** — paleta, par tipográfico e imagens da marca:
 
@@ -63,8 +63,8 @@ O `type` é `wordpress-plugin`; com `composer/installers` no projeto ele cai em
 
 Depois de ativar:
 
-1. **OG Banners → Aparência**: paleta, font stacks, nome da marca, logo e símbolo.
-2. **OG Banners**: revise os textos de cada layout e clique em *Generate and save banner*.
+1. **Banners OG → Aparência**: paleta, font stacks, nome da marca, logo e símbolo.
+2. **Banners OG**: revise os textos de cada layout e clique em *Generate and save banner*.
 3. Posts e páginas passam a gerar o próprio banner ao salvar.
 
 ---
@@ -76,7 +76,7 @@ Depois de ativar:
 | `Banners_OG_Plugin` | Bootstrap, chaves de storage, config do JS e enqueue dos assets. |
 | `Banners_OG_Theme` | Paleta, tipografia e imagens da marca; imprime as CSS custom properties. |
 | `Banners_OG_Templates` | Registro de layouts, campos, textos padrão e resolução de layout por contexto. |
-| `Banners_OG_Admin` | Tela **OG Banners**: um card por layout. |
+| `Banners_OG_Admin` | Tela **Banners OG**: um card por layout. |
 | `Banners_OG_Settings` | Tela **Aparência** (Settings API). |
 | `Banners_OG_Metabox` | Metabox por conteúdo. |
 | `Banners_OG_Ajax` | Recebe o upload, valida permissão e grava. |

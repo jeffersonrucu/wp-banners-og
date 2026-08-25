@@ -1,5 +1,5 @@
 /**
- * OG Banners — media pickers and color inputs of the appearance screen.
+ * Banners OG — media pickers and color inputs of the appearance screen.
  */
 (function (window, document) {
   'use strict';

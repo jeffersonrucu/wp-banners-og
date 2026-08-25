@@ -21,8 +21,9 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
 ### Changed
 
-- Plugin renomeado para **OG Banners**: prefixos `BANNERS_OG_*` / `Banners_OG_*` /
-  `banners_og_*`, text domain `banners-og`, pasta `uploads/banners-og/`.
+- Plugin renomeado para **Banners OG**: prefixos `BANNERS_OG_*` / `Banners_OG_*` /
+  `banners_og_*`, text domain `banners-og`, pasta `uploads/banners-og/`. O nome
+  gera o slug `banners-og` no WordPress.org, casando com o text domain.
 - Layouts genéricos (`cover`, `feature`, `article`, `profile`) com cores e fontes
   lidas de CSS custom properties, no lugar dos 4 layouts de marca fixa.
 - Fundo chapado com detalhe geométrico próprio (`.bog-corner`) em vez do símbolo

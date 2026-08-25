@@ -1,5 +1,5 @@
 /**
- * OG Banners — live preview, html2canvas capture and upload.
+ * Banners OG — live preview, html2canvas capture and upload.
  *
  * Public API (window.BannersOG):
  *   registerTemplate(kind, renderer)  register or replace a layout

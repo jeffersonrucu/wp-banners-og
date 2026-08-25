@@ -1,6 +1,6 @@
 <?php
 /**
- * "OG Banners" screen: the default banner of every layout.
+ * "Banners OG" screen: the default banner of every layout.
  */
 
 if ( ! defined( 'WPINC' ) ) {
@@ -23,8 +23,8 @@ class Banners_OG_Admin {
 
 	public static function register_menu(): void {
 		self::$page_hook = (string) add_menu_page(
-			__( 'OG Banners', 'banners-og' ),
-			__( 'OG Banners', 'banners-og' ),
+			__( 'Banners OG', 'banners-og' ),
+			__( 'Banners OG', 'banners-og' ),
 			'manage_options',
 			self::MENU_SLUG,
 			[ __CLASS__, 'render_page' ],
