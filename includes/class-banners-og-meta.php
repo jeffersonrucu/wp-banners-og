@@ -73,7 +73,7 @@ class Banners_OG_Meta {
 		$description = (string) get_bloginfo( 'description' );
 		$url         = home_url( '/' );
 		$type        = 'website';
-		$image       = null;
+		$image       = self::current_image();
 
 		if ( is_singular() ) {
 			$post = get_queried_object();
@@ -92,30 +92,42 @@ class Banners_OG_Meta {
 				} elseif ( $excerpt ) {
 					$description = (string) $excerpt;
 				}
-
-				$image = self::post_image( $post->ID );
 			}
 		} elseif ( is_post_type_archive() ) {
-			$url   = (string) get_post_type_archive_link( (string) get_query_var( 'post_type' ) );
-			$image = self::default_image( Banners_OG_Templates::default_kind_for_context() );
+			$url = (string) get_post_type_archive_link( (string) get_query_var( 'post_type' ) );
 		} elseif ( is_category() || is_tag() || is_tax() ) {
 			$term = get_queried_object();
 			$link = $term instanceof WP_Term ? get_term_link( $term ) : '';
 			$url  = is_string( $link ) && '' !== $link ? $link : $url;
-
-			$image = self::default_image( Banners_OG_Templates::default_kind_for_context() );
 		} elseif ( is_author() ) {
 			$author = get_queried_object();
 			$url    = $author instanceof WP_User ? (string) get_author_posts_url( $author->ID ) : $url;
-			$image  = self::default_image( Banners_OG_Templates::default_kind_for_context() );
-		} else {
-			$image = self::default_image( Banners_OG_Templates::default_kind_for_context() );
 		}
 
 		/**
 		 * Filters the whole payload before it becomes meta tags.
 		 */
 		return apply_filters( 'banners_og_meta_data', compact( 'title', 'description', 'url', 'type', 'image' ) );
+	}
+
+	/**
+	 * Banner that answers for the current request, whatever the context is.
+	 *
+	 * Public so the SEO bridge publishes the same image as the tags printed
+	 * here.
+	 *
+	 * @return array{url:string, width:int, height:int, mime:string}|null
+	 */
+	public static function current_image(): ?array {
+		if ( is_singular() ) {
+			$post = get_queried_object();
+
+			if ( $post instanceof WP_Post ) {
+				return self::post_image( $post->ID );
+			}
+		}
+
+		return self::default_image( Banners_OG_Templates::default_kind_for_context() );
 	}
 
 	/**

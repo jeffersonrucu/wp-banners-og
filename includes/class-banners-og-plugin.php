@@ -16,6 +16,7 @@ class Banners_OG_Plugin {
 
 	public static function init(): void {
 		Banners_OG_Meta::init();
+		Banners_OG_Seo::init();
 		Banners_OG_Ajax::init();
 
 		if ( is_admin() ) {

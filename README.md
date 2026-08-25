@@ -16,6 +16,9 @@ O plugin não tem marca embutida: paleta, tipografia, logo e símbolo vêm das
 configurações; layouts, campos e textos padrão são filtráveis; e um layout novo
 pode ser registrado de fora, sem tocar no plugin.
 
+Quando um plugin de SEO cuida das meta tags, o banner é entregue a ele em vez de
+ficar sem uso — veja [Meta tags](#meta-tags).
+
 **Banners OG** — um card por layout, com preview ao vivo e o arquivo em uso:
 
 ![Tela Banners OG com os quatro layouts](.github/screenshots/banners.png)
@@ -106,6 +109,28 @@ Consequência: trocar de ambiente sem levar `uploads/` derruba os banners — é
 `Banners_OG_Meta` se cala automaticamente se detectar Yoast, Rank Math, AIOSEO ou
 SEOPress. Para forçar o comportamento, use o filtro `banners_og_output_tags`.
 
+Calar não basta: sem as tags do plugin, o banner gerado não chegaria a lugar
+nenhum. Por isso `Banners_OG_Seo` entrega a imagem para quem estiver imprimindo
+as tags, pelos filtros públicos de cada plugin:
+
+| Plugin | Filtros usados |
+| --- | --- |
+| Yoast SEO | `wpseo_opengraph_image`, `wpseo_twitter_image`, `wpseo_opengraph_image_width/height/type` |
+| Rank Math | `rank_math/opengraph/facebook/image`, `rank_math/opengraph/twitter/image` |
+| SEOPress | `seopress_social_og_thumb`, `seopress_social_twitter_card_thumb` |
+| All in One SEO | `aioseo_facebook_tags`, `aioseo_twitter_tags` |
+
+Duas ressalvas:
+
+- No Yoast, os filtros só rodam quando ele **já escolheu** uma imagem. Post sem
+  imagem destacada e sem fallback social continua sem `og:image`.
+- O formato do array do AIOSEO não é contrato público, então a ponte só troca
+  tags que já venham como string. Se a estrutura mudar, ela não faz nada — não
+  quebra.
+
+Para desligar a ponte e manter a escolha do plugin de SEO, use
+`banners_og_seo_bridge`.
+
 ---
 
 ## Layouts que vêm no plugin
@@ -151,6 +176,7 @@ Ainda assim, `--bog-mark-url` é exposta para quem quiser usar a marca como
 | `banners_og_default_kind_for_context` | filtro | por contexto | Layout usado em arquivos e listagens. |
 | `banners_og_output_tags` | filtro | `true` (sem plugin de SEO) | Liga/desliga a saída das meta tags. |
 | `banners_og_meta_data` | filtro | array montado | Ajusta título, descrição, URL, tipo e imagem. |
+| `banners_og_seo_bridge` | filtro | `true` | Liga/desliga a entrega do banner ao plugin de SEO. |
 | `banners_og_enqueue_assets` | action | — | Enfileira CSS/JS de layouts próprios. |
 
 ### API JavaScript
@@ -282,7 +308,8 @@ banners-og/
 │   ├── class-banners-og-settings.php
 │   ├── class-banners-og-metabox.php
 │   ├── class-banners-og-ajax.php
-│   └── class-banners-og-meta.php
+│   ├── class-banners-og-meta.php
+│   └── class-banners-og-seo.php       # entrega o banner ao plugin de SEO ativo
 ├── assets/
 │   ├── css/admin.css             # UI do admin + os 4 layouts
 │   ├── js/banner.js              # registro de layouts, preview, captura, upload

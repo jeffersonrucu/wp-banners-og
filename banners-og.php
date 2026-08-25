@@ -28,6 +28,7 @@ require_once BANNERS_OG_DIR . 'includes/class-banners-og-storage.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-plugin.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-activator.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-meta.php';
+require_once BANNERS_OG_DIR . 'includes/class-banners-og-seo.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-ajax.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-admin.php';
 require_once BANNERS_OG_DIR . 'includes/class-banners-og-settings.php';
