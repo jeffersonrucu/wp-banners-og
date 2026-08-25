@@ -139,6 +139,32 @@ class Banners_OG_Admin {
 	}
 
 	/**
+	 * What the banner of a layout answers for, so the screen says where each
+	 * card lands instead of leaving it to be guessed.
+	 *
+	 * @param array<int, string> $contexts
+	 */
+	private static function render_uses( array $contexts ): void {
+		if ( [] === $contexts ) {
+			printf(
+				'<span class="bog-uses bog-uses--none">%s</span>',
+				esc_html__( 'Only where it is picked by hand', 'banners-og' )
+			);
+
+			return;
+		}
+
+		echo '<span class="bog-uses">';
+		printf( '<span class="bog-uses__label">%s</span>', esc_html__( 'Answers for', 'banners-og' ) );
+
+		foreach ( $contexts as $context ) {
+			printf( '<span class="bog-uses__item">%s</span>', esc_html( $context ) );
+		}
+
+		echo '</span>';
+	}
+
+	/**
 	 * Line telling which file is currently serving as og:image.
 	 */
 	public static function render_current( string $image_url, string $empty_message ): void {
@@ -191,6 +217,7 @@ class Banners_OG_Admin {
 							<span class="bog-chip">og:image</span>
 							<strong><?php echo esc_html( $label ); ?></strong>
 							<span class="bog-dim"><?php echo esc_html( BANNERS_OG_WIDTH . ' × ' . BANNERS_OG_HEIGHT ); ?></span>
+							<?php self::render_uses( Banners_OG_Templates::contexts_for_kind( $kind ) ); ?>
 						</div>
 						<div class="bog-card__actions">
 							<span class="bog-status" aria-live="polite"></span>

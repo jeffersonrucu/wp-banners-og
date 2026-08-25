@@ -321,6 +321,49 @@ class Banners_OG_Templates {
 	}
 
 	/**
+	 * What answers to a layout: which post types, taxonomies and fixed screens
+	 * fall back to its banner when they have none of their own.
+	 *
+	 * Kept in step with default_kind_for_context() below, which is where the
+	 * fixed screens are decided.
+	 *
+	 * @return array<int, string>
+	 */
+	public static function contexts_for_kind( string $kind ): array {
+		$fixed = [
+			'cover'   => [
+				__( 'Front page', 'banners-og' ),
+				__( 'Search and anything else', 'banners-og' ),
+			],
+			'article' => [
+				__( 'Blog', 'banners-og' ),
+				__( 'Author archives', 'banners-og' ),
+				__( 'Date archives', 'banners-og' ),
+			],
+		];
+
+		$out = $fixed[ $kind ] ?? [];
+
+		foreach ( self::post_types() as $post_type ) {
+			$object = get_post_type_object( $post_type );
+
+			if ( $object && self::default_kind_for_post_type( $post_type ) === $kind ) {
+				$out[] = (string) $object->labels->name;
+			}
+		}
+
+		foreach ( self::taxonomies() as $taxonomy ) {
+			$object = get_taxonomy( $taxonomy );
+
+			if ( $object && self::default_kind_for_taxonomy( $taxonomy ) === $kind ) {
+				$out[] = (string) $object->labels->name;
+			}
+		}
+
+		return array_values( array_unique( $out ) );
+	}
+
+	/**
 	 * Layout used for the archives and listings of the front end.
 	 */
 	public static function default_kind_for_context(): string {

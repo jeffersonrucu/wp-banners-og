@@ -414,6 +414,7 @@
 
 .bog-card__title {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 10px;
 }
@@ -427,6 +428,30 @@
 }
 
 .bog-dim { font-size: 11px; color: #787c82; }
+
+/* Which screens fall back to this banner. */
+.bog-uses {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #787c82;
+}
+
+.bog-uses__label { letter-spacing: .04em; text-transform: uppercase; }
+
+.bog-uses__item {
+  padding: 1px 7px;
+  border: 1px solid #dcdcde;
+  border-radius: 9px;
+  background: #f6f7f7;
+  color: #50575e;
+}
+
+.bog-uses--none { font-style: italic; }
 
 .bog-card__actions {
   display: flex;

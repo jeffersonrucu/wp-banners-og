@@ -29,7 +29,7 @@ class Banners_OG_Woocommerce {
 	}
 
 	public static function default_kind_for_taxonomy( string $kind, string $taxonomy ): string {
-		return in_array( $taxonomy, [ 'product_cat', 'product_tag' ], true ) ? self::KIND : $kind;
+		return in_array( $taxonomy, [ 'product_cat', 'product_tag', 'product_brand' ], true ) ? self::KIND : $kind;
 	}
 
 	/**
