@@ -1,5 +1,10 @@
 # OG Banners
 
+[![CI](https://github.com/jeffersonrucu/wp-banners-og/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffersonrucu/wp-banners-og/actions/workflows/ci.yml)
+[![License: GPL v2+](https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg)](LICENSE)
+![WordPress 5.9+](https://img.shields.io/badge/WordPress-5.9%2B-21759b.svg)
+![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4.svg)
+
 Plugin WordPress que gera **banners Open Graph 1200 × 630** dentro do próprio admin
 e publica a imagem como `og:image` do site — sem serviço externo, sem GD/Imagick.
 
@@ -38,7 +43,7 @@ pode ser registrado de fora, sem tocar no plugin.
 
 ```bash
 cd wp-content/plugins
-git clone git@github.com:jeffersonrucu/banners-og.git
+git clone git@github.com:jeffersonrucu/wp-banners-og.git
 ```
 
 ### Via Composer (repositório VCS)
@@ -46,7 +51,7 @@ git clone git@github.com:jeffersonrucu/banners-og.git
 ```json
 {
     "repositories": [
-        { "type": "vcs", "url": "git@github.com:jeffersonrucu/banners-og.git" }
+        { "type": "vcs", "url": "git@github.com:jeffersonrucu/wp-banners-og.git" }
     ],
     "require": {
         "jeffersonrucu/banners-og": "^2.0"
@@ -317,6 +322,10 @@ wp plugin check dist/banners-og
 
 Rodar o checker direto no clone acusa `bin/` e `tests/` por não terem guarda de
 acesso direto — são arquivos de CLI, que não fazem parte do pacote.
+
+## Contribuindo
+
+Veja [CONTRIBUTING.md](CONTRIBUTING.md). Vulnerabilidade: [SECURITY.md](SECURITY.md).
 
 ## Licença
 

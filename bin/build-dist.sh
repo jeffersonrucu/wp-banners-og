@@ -18,6 +18,8 @@ while IFS= read -r line; do
     excludes+=( "--exclude=${line}" )
 done < "${root}/.distignore"
 
-rsync -a --delete "${excludes[@]}" "${root}/" "${target}/"
+# --delete-excluded, not just --delete: plain --delete protects excluded files
+# already sitting in the target, so a newly excluded path would linger forever.
+rsync -a --delete --delete-excluded "${excludes[@]}" "${root}/" "${target}/"
 
 echo "Built ${target}"

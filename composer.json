@@ -11,6 +11,11 @@
         "social",
         "html2canvas"
     ],
+    "homepage": "https://github.com/jeffersonrucu/wp-banners-og",
+    "support": {
+        "issues": "https://github.com/jeffersonrucu/wp-banners-og/issues",
+        "source": "https://github.com/jeffersonrucu/wp-banners-og"
+    },
     "authors": [
         {
             "name": "Jefferson Oliveira",

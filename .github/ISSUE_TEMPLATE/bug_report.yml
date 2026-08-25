@@ -1,0 +1,60 @@
+name: Bug report
+description: Something in the plugin does not behave as documented.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      placeholder: |
+        1. Go to OG Banners > ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      placeholder: "2.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: WordPress and PHP versions
+      placeholder: "WordPress 6.9, PHP 8.2"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: The banner is rendered in the browser, so this matters.
+      placeholder: "Chrome 140 on Windows"
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console and network errors
+      description: Any error from the browser console, or the response of the failing admin-ajax request.
+      render: text
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before opening
+      options:
+        - label: An SEO plugin is not printing the og:* tags instead (see the `banners_og_output_tags` filter).
+        - label: I checked that `wp-content/uploads/banners-og/` is writable by the web server.

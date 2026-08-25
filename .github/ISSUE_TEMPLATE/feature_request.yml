@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest something the plugin should do.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that the plugin makes hard today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you have in mind
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: extension-points
+    attributes:
+      label: Extension points
+      description: The layouts, fields, default copy and font pairings are already filterable, and custom layouts can be registered from JavaScript.
+      options:
+        - label: I read the "Extensão (nível dev)" section of the README and this cannot be done with the existing hooks.

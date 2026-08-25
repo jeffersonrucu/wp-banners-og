@@ -1,4 +1,8 @@
 # Everything that is development tooling, not part of the plugin.
+# Kept in sync with the export-ignore list in .gitattributes: this file feeds
+# bin/build-dist.sh, that one cleans the archives GitHub generates on its own.
+/.git
+/.gitmodules
 /.editorconfig
 /.distignore
 /.gitattributes
@@ -14,4 +18,6 @@
 /tests
 /vendor
 /CHANGELOG.md
+/CONTRIBUTING.md
 /README.md
+/SECURITY.md
