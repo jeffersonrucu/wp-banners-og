@@ -88,6 +88,22 @@ class Banners_OG_Plugin {
 	}
 
 	/**
+	 * Version of an asset, from the file itself.
+	 *
+	 * The plugin version alone is not enough while a version is in the making:
+	 * the file changes, the query string does not, and the browser keeps the
+	 * script it already has.
+	 *
+	 * @param string $relative Path inside the plugin, such as `assets/js/banner.js`.
+	 */
+	public static function asset_version( string $relative ): string {
+		$path     = BANNERS_OG_DIR . $relative;
+		$modified = file_exists( $path ) ? (string) filemtime( $path ) : '';
+
+		return '' !== $modified ? BANNERS_OG_VERSION . '.' . $modified : BANNERS_OG_VERSION;
+	}
+
+	/**
 	 * Assets shared by the settings page and the metabox.
 	 */
 	public static function enqueue_editor_assets(): void {
@@ -104,7 +120,7 @@ class Banners_OG_Plugin {
 			wp_enqueue_style( 'banners-og-fonts', $font_css, [], BANNERS_OG_VERSION );
 		}
 
-		wp_enqueue_style( 'banners-og-admin', BANNERS_OG_URL . 'assets/css/admin.css', [], BANNERS_OG_VERSION );
+		wp_enqueue_style( 'banners-og-admin', BANNERS_OG_URL . 'assets/css/admin.css', [], self::asset_version( 'assets/css/admin.css' ) );
 		wp_add_inline_style( 'banners-og-admin', Banners_OG_Theme::css_variables() );
 
 		wp_enqueue_script(
@@ -119,7 +135,7 @@ class Banners_OG_Plugin {
 			'banners-og-banner',
 			BANNERS_OG_URL . 'assets/js/banner.js',
 			[ 'banners-og-html2canvas' ],
-			BANNERS_OG_VERSION,
+			self::asset_version( 'assets/js/banner.js' ),
 			true
 		);
 

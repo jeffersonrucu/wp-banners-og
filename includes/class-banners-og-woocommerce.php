@@ -171,14 +171,14 @@ class Banners_OG_Woocommerce {
 			'banners-og-woocommerce',
 			BANNERS_OG_URL . 'assets/css/woocommerce.css',
 			[ 'banners-og-admin' ],
-			BANNERS_OG_VERSION
+			Banners_OG_Plugin::asset_version( 'assets/css/woocommerce.css' )
 		);
 
 		wp_enqueue_script(
 			'banners-og-woocommerce',
 			BANNERS_OG_URL . 'assets/js/woocommerce.js',
 			[ 'banners-og-banner' ],
-			BANNERS_OG_VERSION,
+			Banners_OG_Plugin::asset_version( 'assets/js/woocommerce.js' ),
 			true
 		);
 	}

@@ -53,9 +53,9 @@ class Banners_OG_Settings {
 		}
 
 		wp_enqueue_media();
-		wp_enqueue_style( 'banners-og-admin', BANNERS_OG_URL . 'assets/css/admin.css', [], BANNERS_OG_VERSION );
+		wp_enqueue_style( 'banners-og-admin', BANNERS_OG_URL . 'assets/css/admin.css', [], Banners_OG_Plugin::asset_version( 'assets/css/admin.css' ) );
 		wp_add_inline_style( 'banners-og-admin', Banners_OG_Theme::css_variables() );
-		wp_enqueue_script( 'banners-og-settings', BANNERS_OG_URL . 'assets/js/settings.js', [ 'media-editor' ], BANNERS_OG_VERSION, true );
+		wp_enqueue_script( 'banners-og-settings', BANNERS_OG_URL . 'assets/js/settings.js', [ 'media-editor' ], Banners_OG_Plugin::asset_version( 'assets/js/settings.js' ), true );
 
 		wp_localize_script(
 			'banners-og-settings',
