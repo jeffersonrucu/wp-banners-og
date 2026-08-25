@@ -28,8 +28,9 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
 - No layout `product`, os campos **Foto**, **Mostrar a foto** e **Mostrar o
   preço**. O preço não é digitável: vem sempre do produto.
 - Filtro `banners_og_fields_for_context`, que deixa um campo se apresentar de
-  formas diferentes na tela geral e no metabox — é como a **Foto** vira *foto de
-  fallback* na tela Banners OG.
+  formas diferentes na tela geral e no metabox — é como o campo **Foto** fica
+  restrito ao editor do produto, já que na tela geral não há produto algum e o
+  símbolo da marca já responde pelo fallback.
 - Filtro `banners_og_uploads_url`, para servir os banners de outro lugar.
 - Tela **Diagnóstico**: onde os banners são gravados, a URL publicada, o status
   HTTP dessa URL e os sinais de offload de uploads, com relatório em texto puro.

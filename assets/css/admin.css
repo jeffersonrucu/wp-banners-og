@@ -472,24 +472,38 @@
   letter-spacing: 0;
 }
 
-/* Image field: preview next to the picker buttons. */
-.bog-image {
+/* Image field: preview beside the picker, with room to breathe. The selector
+   matches the one styling the labels above, which would otherwise turn this
+   wrapper into a block of uppercase caption text. */
+.bog-fields label > .bog-image {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: inherit;
 }
 
 .bog-image__preview {
-  width: 92px;
-  height: 60px;
+  width: 124px;
+  height: 78px;
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #f0f0f1;
+  background: #f6f7f7;
   border: 1px solid #dcdcde;
-  border-radius: 3px;
+  border-radius: 4px;
+}
+
+.bog-image__preview:empty::after {
+  content: attr(data-empty);
+  font-size: 11px;
+  color: #8c8f94;
 }
 
 .bog-image__preview img {
@@ -502,19 +516,37 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: 8px;
 }
 
-/* Toggle: the checkbox sits before its label, unlike the text fields. */
-.bog-fields label:has(> .bog-field[type="checkbox"]) {
+.bog-image__clear { color: #b32d2e; }
+
+/* Toggle: "[x] what it does" on one line, description under it. */
+.bog-fields label.bog-field-row--toggle {
   display: flex;
-  flex-direction: row-reverse;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.bog-fields label > .bog-field[type="checkbox"] { margin: 0; }
+.bog-fields label.bog-field-row--toggle > .bog-field { margin: 0; }
+
+.bog-fields label.bog-field-row--toggle > .bog-field-row__toggle {
+  display: inline;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #1d2327;
+}
+
+.bog-fields label.bog-field-row--toggle > .description {
+  flex-basis: 100%;
+  margin: 0 0 0 26px;
+}
 
 .bog-current {
   font-size: 12px;

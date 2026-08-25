@@ -54,12 +54,17 @@ class Banners_OG_Admin {
 		}
 
 		printf(
-			'<label%1$s%2$s>',
+			'<label class="bog-field-row bog-field-row--%1$s"%2$s%3$s>',
+			esc_attr( $field['type'] ),
 			[] !== $field['kinds'] ? ' data-kinds="' . esc_attr( implode( ' ', $field['kinds'] ) ) . '"' : '',
 			$hidden ? ' hidden' : ''
 		);
 
-		echo '<span>' . esc_html( $field['label'] ) . '</span>';
+		// A checkbox reads as "[x] what it does", so its label comes after the
+		// control instead of above it.
+		if ( 'toggle' !== $field['type'] ) {
+			echo '<span>' . esc_html( $field['label'] ) . '</span>';
+		}
 
 		switch ( $field['type'] ) {
 			case 'textarea':
@@ -76,10 +81,11 @@ class Banners_OG_Admin {
 				break;
 			case 'toggle':
 				printf(
-					'<input type="checkbox" class="bog-field" data-field="%1$s" name="%2$s" value="1"%3$s>',
+					'<input type="checkbox" class="bog-field" data-field="%1$s" name="%2$s" value="1"%3$s><span class="bog-field-row__toggle">%4$s</span>',
 					esc_attr( $key ),
 					esc_attr( $name ),
-					checked( '' !== $value, true, false )
+					checked( '' !== $value, true, false ),
+					esc_html( $field['label'] )
 				);
 				break;
 			default:
@@ -113,7 +119,8 @@ class Banners_OG_Admin {
 					value="<?php echo esc_attr( $value ); ?>"
 					placeholder="<?php echo esc_attr( $placeholder ); ?>">
 
-			<span class="bog-image__preview" data-bog-image-preview>
+			<span class="bog-image__preview" data-bog-image-preview
+					data-empty="<?php esc_attr_e( 'No image', 'banners-og' ); ?>">
 				<?php if ( '' !== $preview ) : ?>
 					<img src="<?php echo esc_url( $preview ); ?>" alt="">
 				<?php endif; ?>
@@ -123,8 +130,8 @@ class Banners_OG_Admin {
 				<button type="button" class="button button-small" data-bog-image-select>
 					<?php esc_html_e( 'Select image', 'banners-og' ); ?>
 				</button>
-				<button type="button" class="button-link" data-bog-image-clear<?php echo '' !== $value ? '' : ' hidden'; ?>>
-					<?php esc_html_e( 'Use the default one', 'banners-og' ); ?>
+				<button type="button" class="button-link bog-image__clear" data-bog-image-clear<?php echo '' !== $value ? '' : ' hidden'; ?>>
+					<?php esc_html_e( 'Remove', 'banners-og' ); ?>
 				</button>
 			</span>
 		</span>

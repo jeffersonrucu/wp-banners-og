@@ -101,20 +101,18 @@ class Banners_OG_Woocommerce {
 	}
 
 	/**
-	 * On the Banners OG screen the product layout has no product: the photo
-	 * there is the fallback of the products with no image of their own.
+	 * The Banners OG screen has no product in front of it: picking one photo
+	 * there would say nothing about the catalogue. A product with no image of
+	 * its own already falls back to the brand mark.
 	 *
 	 * @param array<string, array<string, mixed>> $fields
 	 *
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function fields_for_context( array $fields, string $kind, string $context ): array {
-		if ( self::KIND !== $kind || 'default' !== $context || ! isset( $fields['photo'] ) ) {
-			return $fields;
+		if ( self::KIND === $kind && 'default' === $context ) {
+			unset( $fields['photo'] );
 		}
-
-		$fields['photo']['label']       = __( 'Fallback photo', 'banners-og' );
-		$fields['photo']['description'] = __( 'Printed when the product has no image of its own. Every product uses its own photo, chosen in the product editor.', 'banners-og' );
 
 		return $fields;
 	}

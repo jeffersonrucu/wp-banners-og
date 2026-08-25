@@ -212,8 +212,10 @@ Os placeholders do metabox saem do próprio produto: categoria (primeiro termo d
 Digitar qualquer campo sobrescreve; deixar vazio mantém o valor do produto.
 
 O card **Product** na tela *Banners OG* é a configuração geral: vale para os
-arquivos da loja, define o padrão dos toggles e a **foto de fallback**, usada por
-produto sem imagem própria. Como ali não existe produto, o preview sai sem preço.
+arquivos da loja e define o padrão dos toggles. Ali não existe produto, então o
+preview sai sem preço e sem foto — o painel cai no símbolo da marca, que já é o
+fallback de qualquer produto sem imagem própria. Por isso o campo **Foto** só
+aparece no editor do produto.
 
 Limitações conhecidas:
 
