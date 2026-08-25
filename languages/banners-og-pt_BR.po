@@ -1,0 +1,457 @@
+# Copyright (C) 2026 Jefferson Oliveira
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+
+#. Plugin Name of the plugin
+#: banners-og.php
+#: includes/class-banners-og-admin.php:26
+#: includes/class-banners-og-admin.php:27
+msgid "Banners OG"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: banners-og.php
+msgid "https://github.com/jeffersonrucu/wp-banners-og"
+msgstr ""
+
+#. Description of the plugin
+#: banners-og.php
+msgid "Builds 1200x630 Open Graph banners in the WordPress admin and publishes them as og:image. No external service, no GD or Imagick."
+msgstr "Gera banners Open Graph de 1200x630 dentro do admin do WordPress e publica a imagem como og:image. Sem serviço externo, sem GD nem Imagick."
+
+#. Author of the plugin
+#: banners-og.php
+msgid "Jefferson Oliveira"
+msgstr ""
+
+#. Author URI of the plugin
+#: banners-og.php
+msgid "https://github.com/jeffersonrucu"
+msgstr ""
+
+#: includes/class-banners-og-admin.php:123
+msgid "No image"
+msgstr "Nenhuma imagem"
+
+#: includes/class-banners-og-admin.php:131
+#: includes/class-banners-og-plugin.php:100
+#: includes/class-banners-og-settings.php:64
+#: includes/class-banners-og-settings.php:256
+msgid "Select image"
+msgstr "Selecionar imagem"
+
+#: includes/class-banners-og-admin.php:134
+#: includes/class-banners-og-settings.php:259
+msgid "Remove"
+msgstr "Remover"
+
+#: includes/class-banners-og-admin.php:151
+msgid "Only where it is picked by hand"
+msgstr "Só quando escolhido manualmente"
+
+#: includes/class-banners-og-admin.php:158
+msgid "Answers for"
+msgstr "Vale para"
+
+#: includes/class-banners-og-admin.php:176
+#: includes/class-banners-og-plugin.php:99
+msgid "Current banner:"
+msgstr "Banner atual:"
+
+#: includes/class-banners-og-admin.php:196
+msgid "Open Graph banners"
+msgstr "Banners Open Graph"
+
+#. translators: 1: banner width in pixels, 2: banner height in pixels.
+#: includes/class-banners-og-admin.php:201
+#, php-format
+msgid "Sharing images (%1$d × %2$d) used by the og:image tags of the site. Edit the copy, click \"Generate and save\" and the banner of that context is replaced right away. Posts and pages can override their own banner in the editor."
+msgstr "Imagens de compartilhamento (%1$d × %2$d) usadas nas tags og:image do site. Edite os textos, clique em \"Gerar e salvar\" e o banner daquele contexto é trocado na hora. Cada conteúdo pode ter o próprio banner, definido no editor."
+
+#: includes/class-banners-og-admin.php:225
+msgid "Generate and save banner"
+msgstr "Gerar e salvar banner"
+
+#: includes/class-banners-og-admin.php:239
+msgid "No banner generated yet — this context has no og:image until you generate one."
+msgstr "Nenhum banner gerado ainda — este contexto fica sem og:image até você gerar um."
+
+#: includes/class-banners-og-ajax.php:106
+#: includes/class-banners-og-ajax.php:147
+#: includes/class-banners-og-ajax.php:197
+msgid "You are not allowed to do this."
+msgstr "Você não tem permissão para fazer isso."
+
+#: includes/class-banners-og-ajax.php:113
+msgid "Unknown layout."
+msgstr "Layout desconhecido."
+
+#: includes/class-banners-og-ajax.php:135
+msgid "Default banner updated."
+msgstr "Banner padrão atualizado."
+
+#: includes/class-banners-og-ajax.php:153
+#: includes/class-banners-og-ajax.php:193
+msgid "Unsupported content."
+msgstr "Conteúdo não suportado."
+
+#: includes/class-banners-og-ajax.php:180
+#: includes/class-banners-og-ajax.php:224
+#: includes/class-banners-og-plugin.php:97
+msgid "Banner updated."
+msgstr "Banner atualizado."
+
+#: includes/class-banners-og-metabox.php:24
+#: includes/class-banners-og-termbox.php:101
+msgid "OG banner (social sharing)"
+msgstr "Banner OG (compartilhamento)"
+
+#: includes/class-banners-og-metabox.php:76
+msgid "This content gets its <strong>own banner, rebuilt automatically on save</strong>: the banner title takes the post title and the previous image is replaced. Tick the box below only to change the layout or the copy."
+msgstr "Este conteúdo tem o <strong>próprio banner, refeito automaticamente ao salvar</strong>: o título do banner vem do título do conteúdo e a imagem anterior é substituída. Marque a caixa abaixo só para mudar o layout ou os textos."
+
+#: includes/class-banners-og-metabox.php:85
+#: includes/class-banners-og-termbox.php:115
+msgid "Customize the layout and the copy of this banner"
+msgstr "Personalizar o layout e os textos deste banner"
+
+#: includes/class-banners-og-metabox.php:93
+#: includes/class-banners-og-termbox.php:123
+msgid "Layout"
+msgstr "Layout"
+
+#: includes/class-banners-og-metabox.php:130
+#: includes/class-banners-og-termbox.php:157
+msgid "Generate banner now"
+msgstr "Gerar banner agora"
+
+#: includes/class-banners-og-metabox.php:138
+msgid "No banner generated yet. It is created when you save this content."
+msgstr "Nenhum banner gerado ainda. Ele é criado quando você salva este conteúdo."
+
+#: includes/class-banners-og-plugin.php:95
+msgid "Building banner…"
+msgstr "Montando o banner…"
+
+#: includes/class-banners-og-plugin.php:96
+msgid "Saving…"
+msgstr "Salvando…"
+
+#: includes/class-banners-og-plugin.php:98
+msgid "The banner could not be generated."
+msgstr "Não foi possível gerar o banner."
+
+#: includes/class-banners-og-plugin.php:101
+#: includes/class-banners-og-settings.php:65
+msgid "Use this image"
+msgstr "Usar esta imagem"
+
+#: includes/class-banners-og-settings.php:29
+#: includes/class-banners-og-settings.php:83
+msgid "Banner appearance"
+msgstr "Aparência dos banners"
+
+#: includes/class-banners-og-settings.php:30
+msgid "Appearance"
+msgstr "Aparência"
+
+#: includes/class-banners-og-settings.php:88
+msgid "The layouts read these values, so they follow the identity of the site instead of a hardcoded brand."
+msgstr "Os layouts leem estes valores, então seguem a identidade do site em vez de uma marca fixa no código."
+
+#: includes/class-banners-og-settings.php:94
+msgid "Palette"
+msgstr "Paleta"
+
+#: includes/class-banners-og-settings.php:117
+msgid "Typography"
+msgstr "Tipografia"
+
+#: includes/class-banners-og-settings.php:121
+msgid "Font pairing"
+msgstr "Par tipográfico"
+
+#: includes/class-banners-og-settings.php:137
+msgid "Custom — I will type the font stacks"
+msgstr "Personalizado — vou digitar as font stacks"
+
+#: includes/class-banners-og-settings.php:148
+msgid "The subtitle and the footer of the banner use this face."
+msgstr "O subtítulo e o rodapé do banner usam esta fonte."
+
+#: includes/class-banners-og-settings.php:153
+msgid "All pairings use fonts that already exist on the reader device, so no external font is downloaded."
+msgstr "Todos os pares usam fontes que já existem no aparelho de quem lê, então nenhuma fonte externa é baixada."
+
+#: includes/class-banners-og-settings.php:163
+msgid "Heading font stack"
+msgstr "Font stack dos títulos"
+
+#: includes/class-banners-og-settings.php:173
+msgid "Body font stack"
+msgstr "Font stack do texto"
+
+#: includes/class-banners-og-settings.php:183
+msgid "Web font stylesheet"
+msgstr "CSS de webfont"
+
+#: includes/class-banners-og-settings.php:191
+msgid "Only needed when the stacks above name a font that is not installed on the reader device. Loading it adds an external request."
+msgstr "Só é preciso quando as stacks acima citam uma fonte que não está instalada no aparelho de quem lê. Carregar essa folha adiciona uma requisição externa."
+
+#: includes/class-banners-og-settings.php:198
+#: includes/class-banners-og-templates.php:80
+msgid "Brand"
+msgstr "Marca"
+
+#: includes/class-banners-og-settings.php:202
+msgid "Brand name"
+msgstr "Nome da marca"
+
+#: includes/class-banners-og-settings.php:209
+msgid "Empty falls back to the site title."
+msgstr "Vazio usa o título do site."
+
+#: includes/class-banners-og-settings.php:215
+msgid "Horizontal logo"
+msgstr "Logo horizontal"
+
+#: includes/class-banners-og-settings.php:216
+msgid "Used by the layouts with a logo slot. Empty falls back to the logo of the active theme."
+msgstr "Usado pelos layouts que têm espaço para logo. Vazio usa o logo do tema ativo."
+
+#: includes/class-banners-og-settings.php:222
+msgid "Square mark"
+msgstr "Símbolo quadrado"
+
+#: includes/class-banners-og-settings.php:223
+msgid "Symbol shown by the layouts. Empty falls back to the site icon."
+msgstr "Símbolo exibido pelos layouts. Vazio usa o ícone do site."
+
+#: includes/class-banners-og-status.php:27
+#: includes/class-banners-og-status.php:54
+msgid "Banner diagnostics"
+msgstr "Diagnóstico dos banners"
+
+#: includes/class-banners-og-status.php:28
+msgid "Diagnostics"
+msgstr "Diagnóstico"
+
+#: includes/class-banners-og-status.php:57
+msgid "Where the banners are written, which URL they are published as, and what a request for that URL answers. Copy the report at the bottom when reporting a problem."
+msgstr "Onde os banners são gravados, com qual URL são publicados e o que essa URL responde. Copie o relatório do fim da página ao relatar um problema."
+
+#: includes/class-banners-og-status.php:62
+msgid "Request the banner URLs now"
+msgstr "Testar as URLs dos banners agora"
+
+#: includes/class-banners-og-status.php:65
+msgid "Asks the server for each banner and shows the HTTP status it answers."
+msgstr "Pede cada banner ao servidor e mostra o status HTTP que ele responde."
+
+#: includes/class-banners-og-status.php:83
+msgid "Report"
+msgstr "Relatório"
+
+#: includes/class-banners-og-status.php:97
+msgid "Environment"
+msgstr "Ambiente"
+
+#: includes/class-banners-og-status.php:98
+msgid "Offload signals"
+msgstr "Sinais de offload"
+
+#: includes/class-banners-og-status.php:99
+msgid "Banners"
+msgstr "Banners"
+
+#: includes/class-banners-og-status.php:236
+msgid "No banner generated yet"
+msgstr "Nenhum banner gerado ainda"
+
+#: includes/class-banners-og-storage.php:287
+#: includes/class-banners-og-storage.php:294
+msgid "The banner could not be uploaded."
+msgstr "Não foi possível enviar o banner."
+
+#: includes/class-banners-og-storage.php:298
+msgid "The generated image is too large."
+msgstr "A imagem gerada é grande demais."
+
+#: includes/class-banners-og-storage.php:304
+msgid "The generated image is not a valid JPEG."
+msgstr "A imagem gerada não é um JPEG válido."
+
+#. translators: 1: expected width in pixels, 2: expected height in pixels.
+#: includes/class-banners-og-storage.php:312
+#, php-format
+msgid "The banner must be %1$d by %2$d pixels."
+msgstr "O banner precisa ter %1$d por %2$d pixels."
+
+#: includes/class-banners-og-storage.php:321
+msgid "The banners directory could not be created."
+msgstr "Não foi possível criar a pasta dos banners."
+
+#: includes/class-banners-og-storage.php:350
+msgid "The banner file could not be written."
+msgstr "Não foi possível gravar o arquivo do banner."
+
+#. translators: %s: banner name, such as og-cover or og-product-12.
+#: includes/class-banners-og-storage.php:393
+#, php-format
+msgid "OG banner: %s"
+msgstr "Banner OG: %s"
+
+#: includes/class-banners-og-templates.php:28
+#: includes/class-banners-og-templates.php:37
+msgid "Cover"
+msgstr "Capa"
+
+#: includes/class-banners-og-templates.php:29
+msgid "Feature"
+msgstr "Destaque"
+
+#: includes/class-banners-og-templates.php:30
+msgid "Article"
+msgstr "Artigo"
+
+#: includes/class-banners-og-templates.php:31
+msgid "Profile"
+msgstr "Perfil"
+
+#: includes/class-banners-og-templates.php:65
+msgid "Eyebrow"
+msgstr "Chapéu"
+
+#: includes/class-banners-og-templates.php:70
+msgid "Title"
+msgstr "Título"
+
+#: includes/class-banners-og-templates.php:72
+msgid "Leave empty to use the post title."
+msgstr "Deixe vazio para usar o título do conteúdo."
+
+#: includes/class-banners-og-templates.php:75
+msgid "Subtitle"
+msgstr "Subtítulo"
+
+#: includes/class-banners-og-templates.php:82
+msgid "Leave empty to use the brand name of the Appearance screen."
+msgstr "Deixe vazio para usar o nome da marca da tela Aparência."
+
+#: includes/class-banners-og-templates.php:87
+msgid "Footer (displayed URL)"
+msgstr "Rodapé (URL exibida)"
+
+#: includes/class-banners-og-templates.php:191
+msgid "Highlight"
+msgstr "Destaque"
+
+#: includes/class-banners-og-templates.php:197
+msgid "From the blog"
+msgstr "Do blog"
+
+#: includes/class-banners-og-templates.php:203
+msgid "Team"
+msgstr "Time"
+
+#: includes/class-banners-og-templates.php:335
+msgid "Front page"
+msgstr "Página inicial"
+
+#: includes/class-banners-og-templates.php:336
+msgid "Search and anything else"
+msgstr "Busca e o restante"
+
+#: includes/class-banners-og-templates.php:339
+msgid "Blog"
+msgstr "Blog"
+
+#: includes/class-banners-og-templates.php:340
+msgid "Author archives"
+msgstr "Arquivos de autor"
+
+#: includes/class-banners-og-templates.php:341
+msgid "Date archives"
+msgstr "Arquivos por data"
+
+#: includes/class-banners-og-termbox.php:106
+msgid "This term gets its <strong>own banner, rebuilt automatically on save</strong>: the banner title takes the term name and the previous image is replaced. Tick the box below only to change the layout or the copy."
+msgstr "Este termo tem o <strong>próprio banner, refeito automaticamente ao salvar</strong>: o título do banner vem do nome do termo e a imagem anterior é substituída. Marque a caixa abaixo só para mudar o layout ou os textos."
+
+#: includes/class-banners-og-termbox.php:165
+msgid "No banner generated yet. It is created when you update this term."
+msgstr "Nenhum banner gerado ainda. Ele é criado quando você atualiza este termo."
+
+#: includes/class-banners-og-theme.php:27
+msgid "Light background"
+msgstr "Fundo claro"
+
+#: includes/class-banners-og-theme.php:28
+msgid "Alternate background"
+msgstr "Fundo alternativo"
+
+#: includes/class-banners-og-theme.php:29
+msgid "Dark background"
+msgstr "Fundo escuro"
+
+#: includes/class-banners-og-theme.php:30
+msgid "Headings"
+msgstr "Títulos"
+
+#: includes/class-banners-og-theme.php:31
+msgid "Body text"
+msgstr "Texto"
+
+#: includes/class-banners-og-theme.php:32
+msgid "Supporting text"
+msgstr "Texto de apoio"
+
+#: includes/class-banners-og-theme.php:33
+msgid "Rules and dividers"
+msgstr "Linhas e divisores"
+
+#: includes/class-banners-og-theme.php:51
+msgid "Modern — sans serif throughout"
+msgstr "Moderno — sans serif em tudo"
+
+#: includes/class-banners-og-theme.php:56
+msgid "Classic — serif headings, sans serif text"
+msgstr "Clássico — títulos serifados, texto sans serif"
+
+#: includes/class-banners-og-theme.php:61
+msgid "Editorial — serif throughout"
+msgstr "Editorial — serifado em tudo"
+
+#: includes/class-banners-og-theme.php:66
+msgid "Technical — sans serif headings, monospaced text"
+msgstr "Técnico — títulos sans serif, texto monoespaçado"
+
+#: includes/class-banners-og-woocommerce.php:76
+msgid "Product"
+msgstr "Produto"
+
+#: includes/class-banners-og-woocommerce.php:92
+msgid "Show the price on the banner"
+msgstr "Mostrar o preço no banner"
+
+#: includes/class-banners-og-woocommerce.php:94
+msgid "The price is always the current price of the product; this only says whether it is printed."
+msgstr "O preço é sempre o preço atual do produto; isto só define se ele aparece."
+
+#: includes/class-banners-og-woocommerce.php:98
+msgid "Show the photo on the banner"
+msgstr "Mostrar a foto no banner"
+
+#: includes/class-banners-og-woocommerce.php:104
+msgid "Photo"
+msgstr "Foto"
+
+#: includes/class-banners-og-woocommerce.php:106
+msgid "Empty uses the image of the product. It has to live on this same domain, otherwise the banner cannot be captured."
+msgstr "Vazio usa a imagem do produto. Ela precisa estar neste mesmo domínio, senão o banner não pode ser capturado."
+
+#: includes/class-banners-og-woocommerce.php:162
+msgid "Store"
+msgstr "Loja"
