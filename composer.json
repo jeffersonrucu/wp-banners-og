@@ -49,7 +49,7 @@
         "lint": "@php -l banners-og.php",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
-        "phpstan": "phpstan analyse --memory-limit=1G",
+        "phpstan": "phpstan analyse --memory-limit=2G",
         "check-version": "@php bin/check-version.php",
         "dist": "bin/build-dist.sh"
     }
