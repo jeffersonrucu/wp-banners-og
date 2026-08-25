@@ -36,15 +36,17 @@ class Banners_OG_Storage {
 	 * @param array<string, mixed> $uploads
 	 */
 	private static function base_url( array $uploads ): string {
-		$base = (string) $uploads['baseurl'];
+		$base    = (string) $uploads['baseurl'];
+		$basedir = (string) $uploads['basedir'];
+		$content = untrailingslashit( WP_CONTENT_DIR );
 
-		if ( wp_parse_url( $base, PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST ) ) {
-			$basedir = (string) $uploads['basedir'];
-			$content = untrailingslashit( WP_CONTENT_DIR );
+		// Only when the banner really sits on the disk of the site: with
+		// uploads on a stream (s3://), the rewritten URL is the one that
+		// answers, and pointing at the site would 404.
+		$is_local = false === strpos( $basedir, '://' ) && 0 === strpos( $basedir, $content );
 
-			if ( 0 === strpos( $basedir, $content ) ) {
-				$base = content_url( substr( $basedir, strlen( $content ) ) );
-			}
+		if ( $is_local && wp_parse_url( $base, PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST ) ) {
+			$base = content_url( substr( $basedir, strlen( $content ) ) );
 		}
 
 		/**
